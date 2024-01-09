@@ -1,5 +1,23 @@
-import hashlib
+# для того, чтобы код работал, нужно, чтобы была такая таблица:
+# CREATE TABLE IF NOT EXISTS public.deposit
+# (
+#     deposit_id integer NOT NULL DEFAULT nextval('deposit_deposit_id_seq'::regclass),
+#     client_id integer NOT NULL,
+#     storage_period date NOT NULL,
+#     loan_id integer,
+#     interest_capitalization_frequency character varying(255) COLLATE pg_catalog."default" NOT NULL,
+#     CONSTRAINT deposit_pkey PRIMARY KEY (deposit_id),
+#     CONSTRAINT deposit_client_id_fkey FOREIGN KEY (client_id)
+#         REFERENCES public.client (client_id) MATCH SIMPLE
+#         ON UPDATE NO ACTION
+#         ON DELETE NO ACTION,
+#     CONSTRAINT deposit_loan_id_fkey FOREIGN KEY (loan_id)
+#         REFERENCES public.loan (loan_id) MATCH SIMPLE
+#         ON UPDATE NO ACTION
+#         ON DELETE NO ACTION
+# )
 
+import hashlib
 from flask import Flask, render_template, redirect, url_for
 from peewee import *
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -237,6 +255,7 @@ def dashboard():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
 
 
 @app.route('/create_deposit', methods=['POST'])
