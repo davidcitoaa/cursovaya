@@ -17,8 +17,12 @@
 
 Почта: {{ email }}<br>
 Номер телефона: {{ phone_number }}<br>
-<form method="post" action="{{ url_for('add_funds') }}">
 
+<form method="post" action="{{ url_for('create_deposit') }}">
+    <div><input type="submit" value="Deposit"></div>
+</form>
+
+<form method="post" action="{{ url_for('add_funds') }}">
     <div><input type="submit" value="Add Funds"></div>
 </form>
 

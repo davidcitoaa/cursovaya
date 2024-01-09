@@ -1,26 +1,30 @@
-# app.py
 import hashlib
 
-from peewee import DoesNotExist, FloatField
-
-from flask import Flask, render_template, redirect, url_for, jsonify, request
-from peewee import Model, AutoField, CharField, DecimalField, PostgresqlDatabase, ForeignKeyField
+from flask import Flask, render_template, redirect, url_for
+from peewee import *
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, DateField
+from wtforms.fields.choices import SelectField
 from wtforms.fields.simple import SubmitField
 from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
 from wtforms import DecimalField, SubmitField
 from wtforms.validators import DataRequired
 from wtforms.fields import DecimalField as DecimalFieldHTML5
-import pprint
+from config import Config  # Импортируем настройки
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key'
+app.config.from_object(Config)  # Используем настройки из config.py
 
 # Конфигурация базы данных
-db = PostgresqlDatabase('CreditOrganizationDB', user='postgres', password='2404', host='localhost', port=5432)
+db = PostgresqlDatabase(
+    app.config['DATABASE_NAME'],
+    user=app.config['DATABASE_USER'],
+    password=app.config['DATABASE_PASSWORD'],
+    host=app.config['DATABASE_HOST'],
+    port=app.config['DATABASE_PORT']
+)
 
 # Инициализация Flask-Login
 login_manager = LoginManager(app)
@@ -57,6 +61,28 @@ class ClientBalance(BaseModel):
         db_table = 'clientbalance'  # Specify table name explicitly
 
 
+class Loan(Model):
+    loan_id = AutoField(primary_key=True)
+    amount = FloatField()
+    interest_rate = FloatField()
+
+    class Meta:
+        database = db
+        db_table = 'loan'
+
+
+class Deposit(Model):
+    deposit_id = AutoField(primary_key=True)
+    client_id = ForeignKeyField(Client, backref='deposit')
+    storage_period = CharField(max_length=255)
+    interest_capitalization_frequency = CharField(max_length=255)
+    loan_id = ForeignKeyField(Loan, null=True)
+
+    class Meta:
+        database = db
+        db_table = 'deposit'
+
+
 # Определение форм для входа и регистрации
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -71,6 +97,22 @@ class RegisterForm(FlaskForm):
     passport_data = StringField('Passport Data', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
     phone = StringField('Phone', validators=[DataRequired()])
+
+
+class DepositForm(FlaskForm):
+    storage_period = DateField(validators=[DataRequired()])
+    interest_capitalization_frequency = SelectField(
+        'Период капитализации процентов',
+        choices=[
+            ('1 месяц', '1 месяц'),
+            ('3 месяца', '3 месяца'),
+            ('6 месяцев', '6 месяцев'),
+            ('1 год', '1 год'),
+            ('3 года', '3 года'),
+        ]
+    )
+    amount = DecimalFieldHTML5('Amount', validators=[DataRequired()])
+    interest_rate = DecimalFieldHTML5('interest_rate', validators=[DataRequired()])
 
 
 @login_manager.user_loader
@@ -195,6 +237,45 @@ def dashboard():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+
+@app.route('/create_deposit', methods=['POST'])
+@login_required
+def create_deposit():
+    form = DepositForm()
+
+    if form.validate_on_submit():
+        amount = float(form.amount.data)
+        interest_rate = float(form.interest_rate.data)
+        loan = Loan.create(
+            amount=amount,  # Получаем значение поля формы
+            interest_rate=interest_rate
+        )
+        loan_id = loan
+        print(loan_id)
+
+        client_id = current_user
+        storage_period = form.storage_period.data
+        interest_capitalization_frequency = form.interest_capitalization_frequency.data
+
+        print(client_id, storage_period, interest_capitalization_frequency)
+        deposit = Deposit.create(
+            client_id=client_id,
+            storage_period=storage_period,
+            interest_capitalization_frequency=interest_capitalization_frequency,
+            loan_id=loan_id,
+        )
+        deposit.save()
+
+        return redirect(url_for('dashboard'))
+    else:
+        # Данные некорректны, выводим ошибки
+        for error in form.errors:
+            print(error)
+
+        return render_template('create_deposit.html', form=form)
+
+    # return render_template('create_deposit.html', form=form)
 
 
 if __name__ == '__main__':
