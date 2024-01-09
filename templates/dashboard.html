@@ -1,0 +1,29 @@
+<!-- templates/dashboard.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+<h1>Welcome, {{ user.full_name }}!</h1>
+
+Ваш баланс: {{ current_balance }}<br>
+
+Имя: {{ name }}<br>
+Дата рождения: {{ date_of_birth }}<br>
+
+Почта: {{ email }}<br>
+Номер телефона: {{ phone_number }}<br>
+<form method="post" action="{{ url_for('add_funds') }}">
+
+    <div><input type="submit" value="Add Funds"></div>
+</form>
+
+<form action="{{ url_for('logout') }}" method="post">
+    <button type="submit">Logout</button>
+</form>
+</body>
+</html>

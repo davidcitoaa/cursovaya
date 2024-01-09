@@ -1,0 +1,23 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Welcome to the Credit Organization System</h1>
+
+    {% if current_user.is_authenticated %}
+        <p>You are already logged in. <a href="{{ url_for('dashboard') }}">Go to Dashboard</a></p>
+        <form action="{{ url_for('logout') }}" method="post">
+            <button type="submit">Logout</button>
+        </form>
+    {% else %}
+        <p>If you have an account, please <a href="{{ url_for('login') }}">login</a>.</p>
+        <p>If you don't have an account, please <a href="{{ url_for('register') }}">register</a>.</p>
+    {% endif %}
+</body>
+</html>
