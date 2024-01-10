@@ -1,0 +1,19 @@
+вот такая таблица должна быть
+
+CREATE TABLE IF NOT EXISTS public.deposit
+(
+    deposit_id integer NOT NULL DEFAULT nextval('deposit_deposit_id_seq'::regclass),
+    client_id integer NOT NULL,
+    closing_date date NOT NULL,
+    loan_id integer NOT NULL,
+    date_opened date NOT NULL,
+    CONSTRAINT deposit_pkey PRIMARY KEY (deposit_id),
+    CONSTRAINT deposit_client_id_fkey FOREIGN KEY (client_id)
+        REFERENCES public.client (client_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT deposit_loan_id_fkey FOREIGN KEY (loan_id)
+        REFERENCES public.loan (loan_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)

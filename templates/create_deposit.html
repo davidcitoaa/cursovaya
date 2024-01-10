@@ -9,7 +9,8 @@
 
 <h1>Создание вклада</h1>
 
-<form action="{{ url_for('create_deposit') }}" method="post">
+<form id="depositForm" action="{{ url_for('create_deposit') }}" method="post">
+    {{ form.hidden_tag() }}
 
     {% if error %}
     <p class="error">{{ error }}</p>
@@ -17,29 +18,65 @@
     Ваш баланс: {{ current_balance }} рублей<br>
 
     <div class="form-group">
-        {{ form.hidden_tag() }}
         <label for="amount">Сумма</label>
-        {{ form.amount(class="form-control") }}
-        {% if form.amount.errors %}
-            <span class="error">This field is required.</span>
-        {% endif %}
-        <br>
-        <label for="duration">Срок</label>
-        {{ form.duration(class="form-control") }}
-        {% if form.duration.errors %}
-            <span class="error">This field is required.</span>
-        {% endif %}
+        {{ form.amount(id="amountInput", class="form-control") }}
     </div>
 
+    <div class="form-group">
+        <label for="duration">Срок</label>
+        {{ form.duration(class="form-control") }}
+    </div>
 
+    <!-- Информация о проценте и процентах в рублях -->
+    <div id="rateInfo"></div>
 
+    <!-- Сообщение о недостаточности средств -->
+    <div id="insufficientFunds" style="color: red;"></div>
 
-
-    <button type="submit" class="btn btn-primary">Открыть вклад</button>
+    <!-- Кнопка "Открыть вклад" -->
+    <button type="submit" style="display: none;" id="openDepositBtn" class="btn btn-success">Открыть вклад</button>
 </form>
 
 <form action="{{ url_for('dashboard') }}" method="get">
     <button type="submit">Вернуться в профиль</button>
 </form>
+
+<!-- Скрипт для отображения информации о проценте и процентах в рублях -->
+<script>
+    var amountInput = document.getElementById("amountInput");
+    var rateInfo = document.getElementById("rateInfo");
+    var openDepositBtn = document.getElementById("openDepositBtn");
+    var insufficientFundsMsg = document.getElementById("insufficientFunds");
+
+    amountInput.addEventListener("input", function () {
+        showRateInfo();
+    });
+
+    function showRateInfo() {
+        var amount = parseFloat(amountInput.value);
+        var duration = document.getElementById("duration").value;
+        var months = parseInt(duration);
+        var interestRate = (duration <= 12) ? 10 : 15;
+        var futureInterest = (amount * duration * interestRate / 12 / 100).toFixed(2);
+
+        // Проверка на недостаточность средств
+        if (amount > {{ current_balance }}) {
+            insufficientFundsMsg.textContent = "Недостаточно средств для открытия вклада";
+            openDepositBtn.style.display = "none";
+            return;
+        } else {
+            insufficientFundsMsg.textContent = "";
+        }
+
+        var rateInfoText = "Процентная ставка: " + interestRate + "%<br>";
+        rateInfoText += "Через " + months + " месяцев будет начислено: " + futureInterest + " рублей";
+
+        rateInfo.innerHTML = rateInfoText;
+
+        // Показываем кнопку "Открыть вклад" после отображения информации
+        openDepositBtn.style.display = "block";
+    }
+</script>
+
 </body>
 </html>

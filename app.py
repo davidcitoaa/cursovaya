@@ -72,12 +72,27 @@ class Loan(Model):
         db_table = 'loan'
 
 
-class Deposit(Model):
+class Deposit(BaseModel):
     deposit_id = AutoField(primary_key=True)
-    client_id = ForeignKeyField(Client, backref='deposit')
-    storage_period = CharField(max_length=255)
-    interest_capitalization_frequency = CharField(max_length=255)
-    loan_id = ForeignKeyField(Loan, null=True)
+    client_id = ForeignKeyField(Client, backref='deposits')
+    closing_date = CharField(max_length=255)
+    loan_id = ForeignKeyField(Loan, backref='deposit')
+    date_opened = CharField(max_length=255)
+
+    def calculate_interest(self):
+        # Проверка наличия даты закрытия и даты открытия
+        if self.closing_date and self.date_opened:
+            # Преобразование строковых дат в объекты datetime
+            closing_date = datetime.strptime(self.closing_date, "%Y-%m-%d")
+            date_opened = datetime.strptime(self.date_opened, "%Y-%m-%d")
+
+            # Разница в днях между датой закрытия и датой открытия
+            duration_days = (closing_date - date_opened).days
+            # Рассчет процентов в рублях
+            interest_in_rubles = self.loan_id.amount * (self.loan_id.interest_rate / 100) * (duration_days / 30 / 12)
+            return round(interest_in_rubles, 2)
+        else:
+            return 0.0
 
     class Meta:
         database = db
@@ -122,9 +137,9 @@ class DepositForm(FlaskForm):
             (18, '18 месяцев'),
             (19, '19 месяцев'),
             (20, '20 месяцев'),
-            (21, '21 месяцев'),
-            (22, '22 месяцев'),
-            (23, '23 месяцев'),
+            (21, '21 месяц'),
+            (22, '22 месяца'),
+            (23, '23 месяца'),
             (24, '24 месяца'),
         ],
         validators=[DataRequired()]
@@ -248,6 +263,7 @@ def getClientBalance():
     balance_value = client_balance.balance
     return balance_value
 
+
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -283,7 +299,8 @@ def dashboard():
                            date_of_birth=date_of_birth,
                            email=email,
                            phone_number=phone,
-                           deposits=user_deposits)
+                           deposits=user_deposits,
+                           calculate_interest=Deposit.calculate_interest)
 
 
 @app.route('/logout', methods=['POST'])
@@ -303,15 +320,12 @@ def create_deposit():
 
         # Проверка, что сумма депозита меньше баланса пользователя
         if user_balance < amount:
-            return render_template('create_deposit.html', form=form, error="Недостаточно средств на балансе", current_balance=user_balance)
+            return render_template('create_deposit.html', form=form, error="Недостаточно средств на балансе",
+                                   current_balance=user_balance)
 
         # Вычитаем сумму депозита из баланса пользователя
         user_balance = current_user.balance.get()
-
-        # Получаем значение баланса из объекта
         current_balance = user_balance.balance  # Доступ к реальному значению баланса
-
-        # Обновляем баланс пользователя
         updated_balance = current_balance - amount
         user_balance.balance = updated_balance
         user_balance.save()
@@ -332,8 +346,8 @@ def create_deposit():
         # Создание депозита
         deposit = Deposit.create(
             client_id=current_user,
-            storage_period=end_date,
-            interest_capitalization_frequency='1 месяц',
+            closing_date=end_date,
+            date_opened=datetime.now(),
             loan_id=loan,
         )
         deposit.save()

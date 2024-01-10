@@ -18,20 +18,22 @@
 Почта: {{ email }}<br>
 Номер телефона: {{ phone_number }}<br>
 
-<h2>Информация о депозитах</h2>
+<h2>Ваши вклады</h2>
 {% if deposits %}
     <ul>
         {% for deposit in deposits %}
-            <li>
-                Сумма: {{ deposit.loan_id.amount }} рублей,
-                Процентная ставка: {{ deposit.loan_id.interest_rate }},
-                Срок хранения: {{ deposit.storage_period }},
-                Частота начисления процентов: {{ deposit.interest_capitalization_frequency }}
-            </li>
-        {% endfor %}
+    <div class="deposit-info">
+        <p>Депозит №{{ deposit.deposit_id }}</p>
+        <p>Сумма: {{ deposit.loan_id.amount }} рублей</p>
+        <p>Процент в рублях по окончании срока: {{ calculate_interest(deposit) }} рублей</p>
+        <p>Дата открытия: {{ deposit.date_opened }}</p>
+        <p>Дата закрытия: {{ deposit.closing_date }}</p>
+        <br>
+    </div>
+{% endfor %}
     </ul>
 {% else %}
-    <p>У вас нет открытых депозитов.</p>
+    <p>У вас нет открытых вкладов.</p>
 {% endif %}
 
 
