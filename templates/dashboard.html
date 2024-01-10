@@ -8,9 +8,9 @@
     <title>Dashboard</title>
 </head>
 <body>
-<h1>Welcome, {{ user.full_name }}!</h1>
+<h1>Добрый день, {{ user.full_name }}!</h1>
 
-Ваш баланс: {{ current_balance }}<br>
+Ваш баланс: {{ current_balance }} рублей<br>
 
 Имя: {{ name }}<br>
 Дата рождения: {{ date_of_birth }}<br>
@@ -18,16 +18,33 @@
 Почта: {{ email }}<br>
 Номер телефона: {{ phone_number }}<br>
 
+<h2>Информация о депозитах</h2>
+{% if deposits %}
+    <ul>
+        {% for deposit in deposits %}
+            <li>
+                Сумма: {{ deposit.loan_id.amount }} рублей,
+                Процентная ставка: {{ deposit.loan_id.interest_rate }},
+                Срок хранения: {{ deposit.storage_period }},
+                Частота начисления процентов: {{ deposit.interest_capitalization_frequency }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>У вас нет открытых депозитов.</p>
+{% endif %}
+
+
 <form method="post" action="{{ url_for('create_deposit') }}">
-    <div><input type="submit" value="Deposit"></div>
+    <div><input type="submit" value="Открыть вклад"></div>
 </form>
 
 <form method="post" action="{{ url_for('add_funds') }}">
-    <div><input type="submit" value="Add Funds"></div>
+    <div><input type="submit" value="Пополнить баланс"></div>
 </form>
 
 <form action="{{ url_for('logout') }}" method="post">
-    <button type="submit">Logout</button>
+    <button type="submit">Выход</button>
 </form>
 </body>
 </html>

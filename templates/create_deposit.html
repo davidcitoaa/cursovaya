@@ -3,53 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Создание депозита</title>
+    <title>Создание вклада</title>
 </head>
 <body>
 
-<h1>Создание депозита</h1>
-
-
+<h1>Создание вклада</h1>
 
 <form action="{{ url_for('create_deposit') }}" method="post">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-        <label for="storage_period">Срок хранения</label>
-        <input type="date" name="storage_period" id="storage_period" class="form-control">
-    </div>
+
+    {% if error %}
+    <p class="error">{{ error }}</p>
+    {% endif %}
+    Ваш баланс: {{ current_balance }} рублей<br>
 
     <div class="form-group">
-        <label for="interest_capitalization_frequency">Частота начисления процентов</label>
-        <select name="interest_capitalization_frequency" id="interest_capitalization_frequency" class="form-control">
-            <option value="1 месяц">1 месяц</option>
-            <option value="3 месяца">3 месяца</option>
-            <option value="6 месяцев">6 месяцев</option>
-            <option value="1 год">1 год</option>
-            <option value="3 года">3 года</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="amount">Сумма депозита</label>
-        <input type="number" name="amount" id="amount" class="form-control">
-        {% for error in form.amount.errors %}
-        <span class="error">{{ error }}</span>
-        {% endfor %}
-    </div>
-
-    <div class="form-group">
-        <label for="interest_rate">Процентная ставка</label>
-        <input type="number" name="interest_rate" id="interest_rate" class="form-control">
-        {% for error in form.interest_rate.errors %}
-        <span class="error">{{ error }}</span>
-        {% endfor %}
+        {{ form.hidden_tag() }}
+        <label for="amount">Сумма</label>
+        {{ form.amount(class="form-control") }}
+        {% if form.amount.errors %}
+            <span class="error">This field is required.</span>
+        {% endif %}
+        <br>
+        <label for="duration">Срок</label>
+        {{ form.duration(class="form-control") }}
+        {% if form.duration.errors %}
+            <span class="error">This field is required.</span>
+        {% endif %}
     </div>
 
 
-    <button type="submit" class="btn btn-primary">Создать</button>
 
+
+
+    <button type="submit" class="btn btn-primary">Открыть вклад</button>
 </form>
 
-<p><a href="{{ url_for('dashboard') }}">Вернуться на главную</a></p>
-
+<form action="{{ url_for('dashboard') }}" method="get">
+    <button type="submit">Вернуться в профиль</button>
+</form>
 </body>
 </html>
