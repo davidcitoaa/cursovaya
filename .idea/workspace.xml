@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9fba6176-095e-4e25-8e07-98e49a62b75a" name="Changes" comment="Добавил отображение вкладов. Исправил неточности.">
+    <list default="true" id="9fba6176-095e-4e25-8e07-98e49a62b75a" name="Changes" comment="изменил отображение вклада в личном кабинете">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/create_deposit.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/create_deposit.html" afterDir="false" />
@@ -140,7 +140,15 @@
       <option name="project" value="LOCAL" />
       <updated>1704889871113</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="изменил отображение вклада в личном кабинете">
+      <option name="closed" value="true" />
+      <created>1704914418096</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1704914418096</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -150,6 +158,7 @@
     <MESSAGE value="Merge branch 'main' of https://github.com/davidcitoaa/cursovaya" />
     <MESSAGE value="Добавил отображение" />
     <MESSAGE value="Добавил отображение вкладов. Исправил неточности." />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавил отображение вкладов. Исправил неточности." />
+    <MESSAGE value="изменил отображение вклада в личном кабинете" />
+    <option name="LAST_COMMIT_MESSAGE" value="изменил отображение вклада в личном кабинете" />
   </component>
 </project>

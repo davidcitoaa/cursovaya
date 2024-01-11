@@ -22,15 +22,17 @@
 {% if deposits %}
     <ul>
         {% for deposit in deposits %}
-    <div class="deposit-info">
-        <p>Депозит №{{ deposit.deposit_id }}</p>
-        <p>Сумма: {{ deposit.loan_id.amount }} рублей</p>
-        <p>Процент в рублях по окончании срока: {{ calculate_interest(deposit) }} рублей</p>
-        <p>Дата открытия: {{ deposit.date_opened }}</p>
-        <p>Дата закрытия: {{ deposit.closing_date }}</p>
-        <br>
-    </div>
-{% endfor %}
+            <div class="deposit-info">
+                <p>Вклад №{{ loop.index }}</p>
+                <p>Сумма: {{ deposit.loan_id.amount }} рублей</p>
+                <p>Ставка {{ deposit.loan_id.interest_rate }}% годовых</p>
+                <p>В конце срока: {{ deposit.calculate_total_amount() }}</p>
+                <p>Доход +{{ calculate_interest(deposit) }} рублей</p>
+                <p>Дата открытия: {{ deposit.formatted_date_opened() }}</p>
+                <p>Дата закрытия: {{ deposit.formatted_closing_date() }}</p>
+                <br>
+            </div>
+        {% endfor %}
     </ul>
 {% else %}
     <p>У вас нет открытых вкладов.</p>

@@ -8,7 +8,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, DateField
 from wtforms.fields.choices import SelectField
 from wtforms.fields.simple import SubmitField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, NumberRange
 from flask_wtf import FlaskForm
 from wtforms import DecimalField, SubmitField
 from wtforms.validators import DataRequired
@@ -79,6 +79,12 @@ class Deposit(BaseModel):
     loan_id = ForeignKeyField(Loan, backref='deposit')
     date_opened = CharField(max_length=255)
 
+    def formatted_date_opened(self):
+        return datetime.strptime(self.date_opened, '%Y-%m-%d').strftime('%d.%m.%Y')
+
+    def formatted_closing_date(self):
+        return datetime.strptime(self.closing_date, '%Y-%m-%d').strftime('%d.%m.%Y')
+
     def calculate_interest(self):
         # Проверка наличия даты закрытия и даты открытия
         if self.closing_date and self.date_opened:
@@ -93,6 +99,9 @@ class Deposit(BaseModel):
             return round(interest_in_rubles, 2)
         else:
             return 0.0
+
+    def calculate_total_amount(self):
+        return self.calculate_interest() + self.loan_id.amount
 
     class Meta:
         database = db
@@ -144,7 +153,7 @@ class DepositForm(FlaskForm):
         ],
         validators=[DataRequired()]
     )
-    amount = DecimalFieldHTML5('Amount', validators=[DataRequired()])
+    amount = DecimalFieldHTML5('Amount', validators=[DataRequired(), NumberRange(min=100)])
     submit = SubmitField('Создать')
 
 
@@ -317,6 +326,10 @@ def create_deposit():
     user_balance = getClientBalance()
     if form.validate_on_submit():
         amount = float(form.amount.data)
+
+        if amount < 100:
+            return render_template('create_deposit.html', form=form, error="Недостаточно средств на балансе",
+                                   current_balance=user_balance)
 
         # Проверка, что сумма депозита меньше баланса пользователя
         if user_balance < amount:
