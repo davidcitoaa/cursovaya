@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9fba6176-095e-4e25-8e07-98e49a62b75a" name="Changes" comment="изменил отображение вклада в личном кабинете">
+    <list default="true" id="9fba6176-095e-4e25-8e07-98e49a62b75a" name="Changes" comment="Страница &quot;создать вклад&quot;. Начал учить джава скрипт, улучшил отображение полей.">
+      <change afterPath="$PROJECT_DIR$/templates/loan_confirmation.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/request_loan.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/create_deposit.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/create_deposit.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/dashboard.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -148,7 +149,15 @@
       <option name="project" value="LOCAL" />
       <updated>1704914418096</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Страница &quot;создать вклад&quot;. Начал учить джава скрипт, улучшил отображение полей.">
+      <option name="closed" value="true" />
+      <created>1705003407831</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1705003407831</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -159,6 +168,7 @@
     <MESSAGE value="Добавил отображение" />
     <MESSAGE value="Добавил отображение вкладов. Исправил неточности." />
     <MESSAGE value="изменил отображение вклада в личном кабинете" />
-    <option name="LAST_COMMIT_MESSAGE" value="изменил отображение вклада в личном кабинете" />
+    <MESSAGE value="Страница &quot;создать вклад&quot;. Начал учить джава скрипт, улучшил отображение полей." />
+    <option name="LAST_COMMIT_MESSAGE" value="Страница &quot;создать вклад&quot;. Начал учить джава скрипт, улучшил отображение полей." />
   </component>
 </project>

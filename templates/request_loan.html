@@ -1,0 +1,39 @@
+<!-- request_loan.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Запрос на кредит</title>
+</head>
+<body>
+
+<h1>Запрос на кредит</h1>
+
+<form id="loanRequestForm" action="{{ url_for('request_loan') }}" method="post">
+    {{ form.hidden_tag() }}
+
+    {% if error %}
+    <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <div class="form-group">
+        <label for="amount">Желаемая сумма кредита</label>
+        {{ form.amount(id="amountInput", class="form-control") }}
+    </div>
+
+    <div class="form-group">
+        <label for="duration">Срок кредита (в годах)</label>
+        {{ form.duration(class="form-control") }}
+    </div>
+
+    <button type="submit" class="btn btn-success">Отправить запрос</button>
+</form>
+
+<form action="{{ url_for('dashboard') }}" method="get">
+    <button type="submit">Вернуться в профиль</button>
+</form>
+
+</body>
+</html>

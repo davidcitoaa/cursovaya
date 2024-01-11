@@ -1,0 +1,24 @@
+<!-- loan_confirmation.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подтверждение кредита</title>
+</head>
+<body>
+
+<h1>Поздравляем! Ваш кредит подтвержден.</h1>
+
+<p>Сумма кредита: {{ amount }} рублей</p>
+<p>Процентная ставка: {{ interest_rate }}%</p>
+<p>Срок кредита: {{ duration }} год{{ 'а' if duration == 1 else 'ов' }}</p>
+<p>Ежемесячный платеж: {{ monthly_payment }} рублей</p>
+
+<form action="{{ url_for('dashboard') }}" method="get">
+    <button type="submit">Вернуться в профиль</button>
+</form>
+
+</body>
+</html>

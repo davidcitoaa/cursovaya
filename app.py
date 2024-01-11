@@ -108,6 +108,24 @@ class Deposit(BaseModel):
         db_table = 'deposit'
 
 
+class Credit(BaseModel):
+    credit_id = AutoField(primary_key=True)
+    client_id = ForeignKeyField(Client, backref='credits')
+    repayment_date = CharField()
+    next_payment_date = CharField()
+    next_payment_amount = FloatField()
+    loan_id = ForeignKeyField(Loan, backref='credits')
+
+    def formatted_repayment_date(self):
+        return datetime.strptime(self.repayment_date, '%Y-%m-%d').strftime('%d.%m.%Y')
+
+    def formatted_next_payment_date(self):
+        return datetime.strptime(self.next_payment_date, '%Y-%m-%d').strftime('%d.%m.%Y')
+
+    class Meta:
+        table_name = 'credit'
+
+
 # Определение форм для входа и регистрации
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -171,6 +189,15 @@ class DepositForm1(FlaskForm):
     )
     amount = DecimalFieldHTML5('Amount', validators=[DataRequired()])
     interest_rate = DecimalFieldHTML5('interest_rate', validators=[DataRequired()])
+
+
+# Форма для запроса на кредит
+class LoanRequestForm(FlaskForm):
+    amount = DecimalFieldHTML5('Желаемая сумма кредита', validators=[DataRequired()])
+    duration = SelectField('Срок кредита (в годах)',
+                           choices=[(i, f'{i} {"год" if i < 5 else "лет"} {"а" if 1 < i < 5 else ""}') for i in
+                                    range(1, 11)], validators=[DataRequired()])
+    submit = SubmitField('Оформить')
 
 
 @login_manager.user_loader
@@ -300,6 +327,9 @@ def dashboard():
     email = user.email
     phone = user.phone
 
+    # Получаем информацию о кредитах пользователя
+    user_credits = Credit.select().join(Loan).where(Credit.client_id == current_user)
+
     # Отображаем данные пользователя
     return render_template('dashboard.html',
                            user=user,
@@ -309,6 +339,7 @@ def dashboard():
                            email=email,
                            phone_number=phone,
                            deposits=user_deposits,
+                           credits=user_credits,  # Добавлено для отображения информации о кредитах
                            calculate_interest=Deposit.calculate_interest)
 
 
@@ -371,6 +402,63 @@ def create_deposit():
             print(error)
 
         return render_template('create_deposit.html', form=form, current_balance=user_balance)
+
+
+# Ваш роут для страницы запроса на кредит
+# Обновленный роут для страницы запроса на кредит
+@app.route('/request_loan', methods=['GET', 'POST'])
+@login_required
+def request_loan():
+    form = LoanRequestForm()
+
+    if form.validate_on_submit():
+        amount = float(form.amount.data)
+        duration = int(form.duration.data)
+
+        # Проверка на минимальную сумму кредита
+        if amount < 1000:
+            return render_template('request_loan.html', form=form, error="Минимальная сумма кредита - 1000 рублей")
+
+        # Расчет процентной ставки в зависимости от срока
+        interest_rate = calculate_interest_rate(duration)
+
+        # Расчет ежемесячного платежа
+        monthly_payment = calculate_monthly_payment(amount, interest_rate, duration)
+
+        # Создание записи о кредите в базе данных
+        create_credit_record(current_user.client_id, amount, duration, monthly_payment, interest_rate)
+
+        return render_template('loan_confirmation.html', amount=amount, interest_rate=interest_rate, duration=duration,
+                               monthly_payment=monthly_payment)
+
+    return render_template('request_loan.html', form=form)
+
+
+# Дополнительная функция для создания записи о кредите в базе данных
+def create_credit_record(client_id, amount, duration, monthly_payment, interest_rate):
+    end_date = datetime.now() + timedelta(days=duration * 365)
+    loan = Loan.create(amount=amount, interest_rate=interest_rate)
+    next_payment_date = datetime.now() + timedelta(days=30)
+    credit = Credit.create(client_id=client_id, repayment_date=end_date, next_payment_date=next_payment_date, next_payment_amount=monthly_payment, loan_id=loan)
+    credit.save()
+
+
+# Функция для расчета процентной ставки в зависимости от срока
+def calculate_interest_rate(duration):
+    if duration <= 3:
+        return 8.0
+    elif duration <= 5:
+        return 10.0
+    else:
+        return 12.0
+
+
+# Функция для расчета ежемесячного платежа
+def calculate_monthly_payment(amount, interest_rate, duration):
+    monthly_interest_rate = interest_rate / 100 / 12
+    total_payments = duration * 12
+    monthly_payment = (amount * monthly_interest_rate) / (1 - (1 + monthly_interest_rate) ** -total_payments)
+    return round(monthly_payment, 2)
 
 
 if __name__ == '__main__':
