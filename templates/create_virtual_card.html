@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Virtual Card</title>
+</head>
+<body>
+    <h1>Create Virtual Card</h1>
+
+    {% if error %}
+    <p class="error">{{ error }}</p>
+    Возвращение в личный кабинет через <span id="countdown">5</span> с
+
+    <script>
+        var seconds = 5; // Измените это значение на желаемое количество секунд
+        var countdownElement = document.getElementById('countdown');
+
+        function updateCountdown() {
+            countdownElement.textContent = seconds;
+            seconds--;
+
+            if (seconds < 0) {
+                window.location.href = "{{ url_for('dashboard') }}";
+            } else {
+                setTimeout(updateCountdown, 1000);
+            }
+        }
+
+        // Инициализация отсчета времени
+        updateCountdown();
+    </script>
+    {% endif %}
+    <form method="post" action="{{ url_for('create_virtual_card') }}">
+        {{ form.csrf_token }}
+        <p>Full Name: {{ user.full_name }}</p>
+        <p>Passport Data: {{ user.passport_data }}</p>
+        <p>Phone: {{ user.phone }}</p>
+        <p>Expiry Date: {{ expiry_date }}</p>
+        <label for="processing_agreement">
+            <input type="checkbox" id="processing_agreement" name="processing_agreement" required>
+            I agree to the processing of my personal data.
+        </label>
+        <div>{{ form.submit }}</div>
+
+
+
+
+    </form>
+
+<form action="{{ url_for('dashboard') }}" method="get">
+    <button type="submit">Вернуться в профиль</button>
+</form>
+</body>
+</html>

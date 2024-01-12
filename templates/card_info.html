@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Information</title>
+</head>
+<body>
+    <h1>Карта создана</h1>
+    <p>Номер карты: {{ card_info.card_number }}</p>
+    <p>Срок действия: {{ card_info.expiry_date }}</p>
+    <p>ФИО: {{ card_info.full_name }}</p>
+
+    <p>Возвращение в личный кабинет через <span id="countdown">5</span> с</p>
+
+    <script>
+        var seconds = 5; // Измените это значение на желаемое количество секунд
+        var countdownElement = document.getElementById('countdown');
+
+        function updateCountdown() {
+            countdownElement.textContent = seconds;
+            seconds--;
+
+            if (seconds < 0) {
+                window.location.href = "{{ url_for('dashboard') }}";
+            } else {
+                setTimeout(updateCountdown, 1000);
+            }
+        }
+
+        // Инициализация отсчета времени
+        updateCountdown();
+    </script>
+</body>
+</html>

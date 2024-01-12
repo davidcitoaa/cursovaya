@@ -1,7 +1,9 @@
 import hashlib
+import random
+import string
 from datetime import datetime, timedelta
 
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request
 from flask_socketio import SocketIO
 from peewee import *
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -158,6 +160,16 @@ class Notification(BaseModel):
         table_name = 'notification'
 
 
+class Card(BaseModel):
+    card_id = AutoField(primary_key=True)
+    client_id = ForeignKeyField(Client, backref='cards')
+    card_number = CharField(max_length=255, unique=True)
+    expiry_date = CharField(max_length=255)
+
+    class Meta:
+        table_name = 'card'
+
+
 # Функция для создания уведомления
 def create_notification(client, notification_type, content_data):
     notification = Notification.create(client_id=client, notification_type=notification_type, content_data=content_data,
@@ -170,6 +182,8 @@ class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
 
+class CardForm(FlaskForm):
+    submit = SubmitField('Создать')
 
 # Определение формы для регистрации
 class RegisterForm(FlaskForm):
@@ -179,7 +193,6 @@ class RegisterForm(FlaskForm):
     passport_data = StringField('Passport Data', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
     phone = StringField('Phone', validators=[DataRequired()])
-
 
 class DepositForm(FlaskForm):
     duration = SelectField(
@@ -366,6 +379,8 @@ def dashboard():
     # Получаем историю операций пользователя
     transaction_logs = TransactionLog.select().where(TransactionLog.client_id == current_user)
 
+    cards = Card.select().where(Card.client_id == current_user)
+
     # Отображаем данные пользователя
     return render_template('dashboard.html',
                            user=user,
@@ -377,7 +392,8 @@ def dashboard():
                            deposits=user_deposits,
                            credits=user_credits,  # Добавлено для отображения информации о кредитах
                            calculate_interest=Deposit.calculate_interest,
-                           transaction_logs=transaction_logs)
+                           transaction_logs=transaction_logs,
+                           cards=cards)
 
 
 @app.route('/logout', methods=['POST'])
@@ -539,6 +555,131 @@ def emit_notifications():
     ]
 
     socketio.emit('notifications', notifications)
+
+
+# Ваш роут для создания виртуальной карты
+@app.route('/create_virtual_card', methods=['GET', 'POST'])
+@login_required
+def create_virtual_card():
+    form = CardForm()
+
+    if form.validate_on_submit():
+        # Логика создания виртуальной карты
+        expiry_date = (datetime.now() + timedelta(days=4 * 365)).strftime('%Y-%m-%d')
+
+        # Генерация номера карты и проверка уникальности
+        generated_card_number = generate_unique_card_number()
+
+        # Проверка на количество созданных карт
+        if Card.select().where(Card.client_id == current_user).count() < 3:
+            # Создание виртуальной карты
+            virtual_card = Card.create(client_id=current_user, card_number=generated_card_number, expiry_date=expiry_date)
+            virtual_card.save()
+
+            # Записываем транзакцию
+            transaction = TransactionLog.create(client_id=current_user,
+                                                operation_datetime=str(datetime.now().strftime("%c")),
+                                                operation_type='ordering a card')
+            transaction.save()
+
+            # Вывод информации о карте
+            card_info = {
+                'card_number': virtual_card.card_number,
+                'expiry_date': virtual_card.expiry_date,
+                'full_name': current_user.full_name,
+            }
+
+            return render_template('card_info.html', card_info=card_info, user=current_user, expiry_date=expiry_date)
+        else:
+            error_message = "Вы уже создали максимальное количество карт (3 карты)."
+            return render_template('create_virtual_card.html', user=current_user, form=form, error=error_message)
+
+    for error in form.errors:
+        print(error)
+    return render_template('create_virtual_card.html', user=current_user, form=form)
+
+# @app.route('/card_info', methods=['GET', 'POST'])
+# @login_required
+# def card_info():
+#
+#     return render_template('card_info.html', card_info=card_info, user=current_user, expiry_date=expiry_date)
+
+# Генерация уникального номера карты
+def generate_unique_card_number():
+    while True:
+        # Генерация случайного 16-значного номера карты
+        generated_card_number = ''.join(random.choices(string.digits, k=16))
+
+        # Проверка на уникальность номера карты в базе данных
+        if not Card.select().where(Card.card_number == generated_card_number).exists():
+            break
+
+    return generated_card_number
+
+
+# Генерация уникального номера карты
+def generate_unique_card_number():
+    while True:
+        # Генерация случайного 16-значного номера карты
+        generated_card_number = ''.join(random.choices(string.digits, k=16))
+
+        # Проверка на уникальность номера карты в базе данных
+        if not Card.select().where(Card.card_number == generated_card_number).exists():
+            break
+
+    return generated_card_number
+
+
+@app.route('/transfer_funds', methods=['GET', 'POST'])
+@login_required
+def transfer_funds():
+
+
+    if request.method == 'POST':
+        recipient_phone = request.form.get('recipient_phone')
+        amount = float(request.form.get('amount'))
+
+        # Логика поиска пользователя по номеру телефона
+        recipient = Client.get_or_none(Client.phone == recipient_phone)
+
+        if recipient:
+            # Логика перевода средств
+            sender_balance = current_user.balance.get()
+
+            if sender_balance.balance >= amount:
+                # Вычитаем сумму перевода из баланса отправителя
+                sender_balance.balance -= amount
+                sender_balance.save()
+
+                # Получаем баланс получателя или создаем новую запись
+                recipient_balance = recipient.balance.get_or_create()
+                recipient_balance.balance += amount
+                recipient_balance.save()
+
+                # Записываем транзакцию
+                transaction = TransactionLog.create(client_id=current_user,
+                                                    operation_datetime=str(datetime.now().strftime("%c")),
+                                                    operation_type='transfer',
+                                                    operation_amount=amount)
+                transaction.save()
+
+                # Создаем транзакцию для получателя
+                recipient_transaction = TransactionLog.create(client_id=recipient,
+                                                               operation_datetime=str(datetime.now().strftime("%c")),
+                                                               operation_type='transfer',
+                                                               operation_amount=amount)
+                recipient_transaction.save()
+
+                # Возвращение на дашборд после перевода
+                return redirect(url_for('dashboard'))
+            else:
+                error_message = "Недостаточно средств на балансе."
+        else:
+            error_message = "Пользователь с указанным номером телефона не найден."
+
+        return render_template('transfer_funds.html', error=error_message)
+
+    return render_template('transfer_funds.html')
 
 if __name__ == '__main__':
     db.connect()
