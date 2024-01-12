@@ -28,12 +28,60 @@
         {{ form.duration(class="form-control") }}
     </div>
 
+    <p id="interestRateOutput"></p>
+    <p id="monthlyPaymentOutput"></p>
+
     <button type="submit" class="btn btn-success">Отправить запрос</button>
 </form>
 
 <form action="{{ url_for('dashboard') }}" method="get">
     <button type="submit">Вернуться в профиль</button>
 </form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const amountInput = document.getElementById('amountInput');
+        const durationInput = document.getElementById('duration');
+        const interestRateOutput = document.getElementById('interestRateOutput');
+        const monthlyPaymentOutput = document.getElementById('monthlyPaymentOutput');
+
+        function updateLoanInfo() {
+            const amount = parseFloat(amountInput.value);
+            const duration = parseInt(durationInput.value);
+
+            if (amount >= 1000) {
+                const interestRate = calculateInterestRate(duration);
+                const monthlyPayment = calculateMonthlyPayment(amount, interestRate, duration);
+
+                interestRateOutput.textContent = `Процентная ставка: ${interestRate}%`;
+                monthlyPaymentOutput.textContent = `Ежемесячный платеж: ${monthlyPayment} рублей`;
+            } else {
+                interestRateOutput.textContent = '';
+                monthlyPaymentOutput.textContent = '';
+            }
+        }
+
+        amountInput.addEventListener('input', updateLoanInfo);
+        durationInput.addEventListener('input', updateLoanInfo);
+
+        function calculateInterestRate(duration) {
+            if (duration <= 3) {
+                return 8.0;
+            } else if (duration <= 5) {
+                return 10.0;
+            } else {
+                return 12.0;
+            }
+        }
+
+        function calculateMonthlyPayment(amount, interestRate, duration) {
+            const totalPayments = amount * (interestRate / 100 + 1);
+            const monthlyPayment = totalPayments / (duration * 12);
+            return monthlyPayment.toFixed(2);
+        }
+    });
+</script>
+
 
 </body>
 </html>

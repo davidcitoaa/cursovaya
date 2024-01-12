@@ -13,12 +13,14 @@
 
 <p>Сумма кредита: {{ amount }} рублей</p>
 <p>Процентная ставка: {{ interest_rate }}%</p>
-<p>Срок кредита: {{ duration }} год{{ 'а' if duration == 1 else 'ов' }}</p>
+<p>Срок кредита: {{ get_loan_period(duration) }}</p>
 <p>Ежемесячный платеж: {{ monthly_payment }} рублей</p>
 
 <form action="{{ url_for('dashboard') }}" method="get">
     <button type="submit">Вернуться в профиль</button>
 </form>
+
+
 
 </body>
 </html>

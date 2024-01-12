@@ -4,12 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9fba6176-095e-4e25-8e07-98e49a62b75a" name="Changes" comment="Страница &quot;создать вклад&quot;. Начал учить джава скрипт, улучшил отображение полей.">
-      <change afterPath="$PROJECT_DIR$/templates/loan_confirmation.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/request_loan.html" afterDir="false" />
+    <list default="true" id="9fba6176-095e-4e25-8e07-98e49a62b75a" name="Changes" comment="Добавил кредиты (прототип)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/loan_confirmation.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/loan_confirmation.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/request_loan.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/request_loan.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -157,8 +157,27 @@
       <option name="project" value="LOCAL" />
       <updated>1705003407831</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Добавил кредиты (прототип)">
+      <option name="closed" value="true" />
+      <created>1705010026147</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1705010026147</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Наконец-то получилось реализовать отображение баланса и его пополнение!!!" />
@@ -169,6 +188,7 @@
     <MESSAGE value="Добавил отображение вкладов. Исправил неточности." />
     <MESSAGE value="изменил отображение вклада в личном кабинете" />
     <MESSAGE value="Страница &quot;создать вклад&quot;. Начал учить джава скрипт, улучшил отображение полей." />
-    <option name="LAST_COMMIT_MESSAGE" value="Страница &quot;создать вклад&quot;. Начал учить джава скрипт, улучшил отображение полей." />
+    <MESSAGE value="Добавил кредиты (прототип)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавил кредиты (прототип)" />
   </component>
 </project>

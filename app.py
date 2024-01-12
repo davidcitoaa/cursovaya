@@ -5,6 +5,7 @@ from flask import Flask, render_template, redirect, url_for
 from peewee import *
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
+from playhouse.postgres_ext import DateTimeTZField
 from wtforms import StringField, PasswordField, DateField
 from wtforms.fields.choices import SelectField
 from wtforms.fields.simple import SubmitField
@@ -66,6 +67,7 @@ class Loan(Model):
     loan_id = AutoField(primary_key=True)
     amount = FloatField()
     interest_rate = FloatField()
+    type = CharField(max_length=255)
 
     class Meta:
         database = db
@@ -94,7 +96,7 @@ class Deposit(BaseModel):
 
             # Разница в днях между датой закрытия и датой открытия
             duration_days = (closing_date - date_opened).days
-            # Рассчет процентов в рублях
+            # Расчет процентов в рублях
             interest_in_rubles = self.loan_id.amount * (self.loan_id.interest_rate / 100) * (duration_days / 30 / 12)
             return round(interest_in_rubles, 2)
         else:
@@ -111,13 +113,14 @@ class Deposit(BaseModel):
 class Credit(BaseModel):
     credit_id = AutoField(primary_key=True)
     client_id = ForeignKeyField(Client, backref='credits')
-    repayment_date = CharField()
+    closing_date = CharField()
     next_payment_date = CharField()
     next_payment_amount = FloatField()
     loan_id = ForeignKeyField(Loan, backref='credits')
+    date_opened = CharField()
 
-    def formatted_repayment_date(self):
-        return datetime.strptime(self.repayment_date, '%Y-%m-%d').strftime('%d.%m.%Y')
+    def formatted_closing_date(self):
+        return datetime.strptime(self.closing_date, '%Y-%m-%d').strftime('%d.%m.%Y')
 
     def formatted_next_payment_date(self):
         return datetime.strptime(self.next_payment_date, '%Y-%m-%d').strftime('%d.%m.%Y')
@@ -125,6 +128,20 @@ class Credit(BaseModel):
     class Meta:
         table_name = 'credit'
 
+
+# Модель TransactionLog
+class TransactionLog(BaseModel):
+    operation_id = AutoField(primary_key=True)
+    client_id = ForeignKeyField(Client, backref='transaction_logs')
+    operation_datetime = CharField(max_length=255)
+    operation_type = CharField(max_length=255)
+    operation_amount = FloatField()
+
+    def formatted_operation_datetime(self):
+        return datetime.strptime(self.operation_datetime, '%Y-%m-%d %H:%M:%S').strftime('%d.%m.%Y %H:%M')
+
+    class Meta:
+        table_name = 'transaction_log'
 
 # Определение форм для входа и регистрации
 class LoginForm(FlaskForm):
@@ -136,7 +153,7 @@ class LoginForm(FlaskForm):
 class RegisterForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
-    birth_date = DateField('Birth Date', validators=[DataRequired()], format='%Y-%m-%d')
+    birth_date = DateField('Birth Date', validators=[DataRequired()], format='%Y-%B-%d')
     passport_data = StringField('Passport Data', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
     phone = StringField('Phone', validators=[DataRequired()])
@@ -175,27 +192,15 @@ class DepositForm(FlaskForm):
     submit = SubmitField('Создать')
 
 
-class DepositForm1(FlaskForm):
-    storage_period = DateField(validators=[DataRequired()])
-    interest_capitalization_frequency = SelectField(
-        'Период капитализации процентов',
-        choices=[
-            ('1 месяц', '1 месяц'),
-            ('3 месяца', '3 месяца'),
-            ('6 месяцев', '6 месяцев'),
-            ('1 год', '1 год'),
-            ('3 года', '3 года'),
-        ]
-    )
-    amount = DecimalFieldHTML5('Amount', validators=[DataRequired()])
-    interest_rate = DecimalFieldHTML5('interest_rate', validators=[DataRequired()])
+def get_loan_period(duration):
+    return f'{duration} {"год" if duration < 5 else "лет"}{"а" if 1 < duration < 5 else ""}'
 
 
 # Форма для запроса на кредит
 class LoanRequestForm(FlaskForm):
     amount = DecimalFieldHTML5('Желаемая сумма кредита', validators=[DataRequired()])
     duration = SelectField('Срок кредита (в годах)',
-                           choices=[(i, f'{i} {"год" if i < 5 else "лет"} {"а" if 1 < i < 5 else ""}') for i in
+                           choices=[(i, get_loan_period(i)) for i in
                                     range(1, 11)], validators=[DataRequired()])
     submit = SubmitField('Оформить')
 
@@ -281,6 +286,12 @@ def add_funds():
             user_balance.balance = updated_balance
             user_balance.save()
 
+        transaction = TransactionLog.create(client_id=current_user,
+                                            operation_datetime=str(datetime.now().strftime("%c")),
+                                            operation_type='replenishment',
+                                            operation_amount=amount)
+        transaction.save()
+
         return redirect(url_for('dashboard'))
     else:
         for error in form.errors:
@@ -330,6 +341,9 @@ def dashboard():
     # Получаем информацию о кредитах пользователя
     user_credits = Credit.select().join(Loan).where(Credit.client_id == current_user)
 
+    # Получаем историю операций пользователя
+    transaction_logs = TransactionLog.select().where(TransactionLog.client_id == current_user)
+
     # Отображаем данные пользователя
     return render_template('dashboard.html',
                            user=user,
@@ -340,7 +354,8 @@ def dashboard():
                            phone_number=phone,
                            deposits=user_deposits,
                            credits=user_credits,  # Добавлено для отображения информации о кредитах
-                           calculate_interest=Deposit.calculate_interest)
+                           calculate_interest=Deposit.calculate_interest,
+                           transaction_logs=transaction_logs)
 
 
 @app.route('/logout', methods=['POST'])
@@ -374,6 +389,13 @@ def create_deposit():
         user_balance.balance = updated_balance
         user_balance.save()
 
+        transaction = TransactionLog.create(client_id=current_user,
+                              operation_datetime=str(datetime.now().strftime("%c")),
+                              operation_type='deposit',
+                              operation_amount=amount)
+        transaction.save()
+        print(transaction.operation_datetime)
+
         duration = int(form.duration.data)
         # Определение процентной ставки в зависимости от срока
         if duration <= 12:
@@ -385,7 +407,7 @@ def create_deposit():
         end_date = datetime.now() + timedelta(days=duration * 30)
 
         # Создание займа
-        loan = Loan.create(amount=amount, interest_rate=interest_rate)
+        loan = Loan.create(amount=amount, interest_rate=interest_rate, type='Вклад')
 
         # Создание депозита
         deposit = Deposit.create(
@@ -419,6 +441,13 @@ def request_loan():
         if amount < 1000:
             return render_template('request_loan.html', form=form, error="Минимальная сумма кредита - 1000 рублей")
 
+        # Вычитаем сумму депозита из баланса пользователя
+        user_balance = current_user.balance.get()
+        current_balance = user_balance.balance  # Доступ к реальному значению баланса
+        updated_balance = current_balance + amount
+        user_balance.balance = updated_balance
+        user_balance.save()
+
         # Расчет процентной ставки в зависимости от срока
         interest_rate = calculate_interest_rate(duration)
 
@@ -428,8 +457,15 @@ def request_loan():
         # Создание записи о кредите в базе данных
         create_credit_record(current_user.client_id, amount, duration, monthly_payment, interest_rate)
 
-        return render_template('loan_confirmation.html', amount=amount, interest_rate=interest_rate, duration=duration,
-                               monthly_payment=monthly_payment)
+        transaction = TransactionLog.create(client_id=current_user,
+                                            operation_datetime=str(datetime.now().strftime("%c")),
+                                            operation_type='credit',
+                                            operation_amount=amount)
+        transaction.save()
+
+        return redirect(url_for('dashboard'))
+        # return render_template('dashboard.html', amount=amount, interest_rate=interest_rate, duration=duration,
+        #                        monthly_payment=monthly_payment, get_loan_period=get_loan_period)
 
     return render_template('request_loan.html', form=form)
 
@@ -437,9 +473,11 @@ def request_loan():
 # Дополнительная функция для создания записи о кредите в базе данных
 def create_credit_record(client_id, amount, duration, monthly_payment, interest_rate):
     end_date = datetime.now() + timedelta(days=duration * 365)
-    loan = Loan.create(amount=amount, interest_rate=interest_rate)
+    date_opened = datetime.now()
+    loan = Loan.create(amount=amount, interest_rate=interest_rate, type='Кредит')
     next_payment_date = datetime.now() + timedelta(days=30)
-    credit = Credit.create(client_id=client_id, repayment_date=end_date, next_payment_date=next_payment_date, next_payment_amount=monthly_payment, loan_id=loan)
+    credit = Credit.create(client_id=client_id, closing_date=end_date, next_payment_date=next_payment_date,
+                           next_payment_amount=monthly_payment, loan_id=loan, date_opened=date_opened)
     credit.save()
 
 
@@ -455,9 +493,8 @@ def calculate_interest_rate(duration):
 
 # Функция для расчета ежемесячного платежа
 def calculate_monthly_payment(amount, interest_rate, duration):
-    monthly_interest_rate = interest_rate / 100 / 12
-    total_payments = duration * 12
-    monthly_payment = (amount * monthly_interest_rate) / (1 - (1 + monthly_interest_rate) ** -total_payments)
+    total_payments = amount * (interest_rate / 100 + 1)
+    monthly_payment = total_payments / (duration * 12)
     return round(monthly_payment, 2)
 
 

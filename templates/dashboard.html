@@ -5,9 +5,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Личный кабинет</title>
+    <style>
+        .green-text { color: green; }
+        .black-text { color: black; }
+    </style>
 </head>
 <body>
+<h1>Личный кабинет</h1>
+
 <h1>Добрый день, {{ user.full_name }}!</h1>
 
 Ваш баланс: {{ current_balance }} рублей<br>
@@ -17,6 +23,18 @@
 
 Почта: {{ email }}<br>
 Номер телефона: {{ phone_number }}<br>
+
+<!-- История операций -->
+<h2>История операций</h2>
+{% for transaction_log in transaction_logs %}
+    {% if transaction_log.operation_type == 'deposit' %}
+        <p class="black-text">Открытие вклада: -{{ transaction_log.operation_amount }} - {{ transaction_log.formatted_operation_datetime() }} </p>
+    {% elif transaction_log.operation_type == 'credit' %}
+        <p class="green-text"> Кредит: +{{ transaction_log.operation_amount }} - {{ transaction_log.formatted_operation_datetime() }}</p>
+    {% elif transaction_log.operation_type == 'replenishment' %}
+        <p class="green-text"> Пополнение: +{{ transaction_log.operation_amount }} - {{ transaction_log.formatted_operation_datetime() }}</p>
+    {% endif %}
+{% endfor %}
 
 <h2>Ваши вклады</h2>
 {% if deposits %}
@@ -28,8 +46,8 @@
                 <p>Ставка {{ deposit.loan_id.interest_rate }}% годовых</p>
                 <p>В конце срока: {{ deposit.calculate_total_amount() }}</p>
                 <p>Доход +{{ calculate_interest(deposit) }} рублей</p>
-                <p>Дата открытия: {{ deposit.formatted_date_opened() }}</p>
-                <p>Дата закрытия: {{ deposit.formatted_closing_date() }}</p>
+                <p>Дата открытия: {{ deposit.formatted_date_opened() }} года</p>
+                <p>Дата закрытия: {{ deposit.formatted_closing_date() }} года</p>
                 <br>
             </div>
         {% endfor %}
@@ -43,11 +61,10 @@
         <ul>
             {% for credit in credits %}
                 <div class="credit-info">
-                    <p>Кредит №{{ loop.index }}</p>
-                    <p>Сумма: {{ credit.loan_id.amount }} рублей</p>
-                    <p>Ежемесячный платеж: {{ credit.next_payment_amount }} рублей</p>
-                    <p>Дата ближайшего платежа:  {{ credit.formatted_next_payment_date() }}</p>
-                    <p>Дата полного погашения: {{ credit.formatted_repayment_date() }}</p>
+                    <p>Кредит №{{ loop.index }} на сумму {{ credit.loan_id.amount }} рублей</p>
+                    <p>Дата ближайшего платежа:  {{ credit.formatted_next_payment_date() }} года</p>
+                    <p>Ближайший платеж: {{ credit.next_payment_amount }} рублей</p>
+                    <p>Дата полного погашения: {{ credit.formatted_closing_date() }} года</p>
                     <br>
                 </div>
             {% endfor %}
