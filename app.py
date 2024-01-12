@@ -2,6 +2,7 @@ import hashlib
 from datetime import datetime, timedelta
 
 from flask import Flask, render_template, redirect, url_for
+from flask_socketio import SocketIO
 from peewee import *
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
@@ -31,6 +32,7 @@ db = PostgresqlDatabase(
 # Инициализация Flask-Login
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+socketio = SocketIO(app)
 
 
 # Определение базовой модели Peewee
@@ -142,6 +144,26 @@ class TransactionLog(BaseModel):
 
     class Meta:
         table_name = 'transaction_log'
+
+
+# Модель Notification
+class Notification(BaseModel):
+    notification_id = AutoField(primary_key=True)
+    client_id = ForeignKeyField(Client, backref='notifications')
+    notification_type = CharField(max_length=255)
+    content_data = CharField(max_length=255)
+    send_datetime = CharField(max_length=255)
+
+    class Meta:
+        table_name = 'notification'
+
+
+# Функция для создания уведомления
+def create_notification(client, notification_type, content_data):
+    notification = Notification.create(client_id=client, notification_type=notification_type, content_data=content_data,
+                        send_datetime=datetime.now().strftime("%c"))
+    notification.save()
+
 
 # Определение форм для входа и регистрации
 class LoginForm(FlaskForm):
@@ -390,9 +412,9 @@ def create_deposit():
         user_balance.save()
 
         transaction = TransactionLog.create(client_id=current_user,
-                              operation_datetime=str(datetime.now().strftime("%c")),
-                              operation_type='deposit',
-                              operation_amount=amount)
+                                            operation_datetime=str(datetime.now().strftime("%c")),
+                                            operation_type='deposit',
+                                            operation_amount=amount)
         transaction.save()
         print(transaction.operation_datetime)
 
@@ -480,6 +502,10 @@ def create_credit_record(client_id, amount, duration, monthly_payment, interest_
                            next_payment_amount=monthly_payment, loan_id=loan, date_opened=date_opened)
     credit.save()
 
+    # Создание уведомления о кредите
+    # notification_content = f'Оформлен кредит: {amount} рублей, ежемесячный платеж: {monthly_payment} рублей'
+    # create_notification(client_id, 'credit', notification_content)
+
 
 # Функция для расчета процентной ставки в зависимости от срока
 def calculate_interest_rate(duration):
@@ -498,7 +524,24 @@ def calculate_monthly_payment(amount, interest_rate, duration):
     return round(monthly_payment, 2)
 
 
+@socketio.on('connect')
+def handle_connect():
+    # Отправить уведомления при подключении
+    emit_notifications()
+
+def emit_notifications():
+    # Функция для отправки уведомлений на клиент
+    # Замените этот код на ваш код получения уведомлений из базы данных
+    notifications = [
+        {'type': 'payment_due', 'content': 'Оплата кредита: 1000 рублей', 'date': '2024-01-15'},
+        {'type': 'interest_due', 'content': 'Начисление процентов по вкладу: 500 рублей', 'date': '2024-02-01'},
+        # Добавьте другие уведомления по мере необходимости
+    ]
+
+    socketio.emit('notifications', notifications)
+
 if __name__ == '__main__':
     db.connect()
+    socketio.run(app)
     # db.create_tables([Client, ClientBalance], safe=True)
     app.run(debug=True)

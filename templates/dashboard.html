@@ -9,6 +9,7 @@
     <style>
         .green-text { color: green; }
         .black-text { color: black; }
+        .blue-text {color: blue; }
     </style>
 </head>
 <body>
@@ -24,13 +25,16 @@
 Почта: {{ email }}<br>
 Номер телефона: {{ phone_number }}<br>
 
+<!-- HTML-элемент для отображения уведомлений -->
+<div id="notification-container"></div>
+
 <!-- История операций -->
 <h2>История операций</h2>
 {% for transaction_log in transaction_logs %}
     {% if transaction_log.operation_type == 'deposit' %}
         <p class="black-text">Открытие вклада: -{{ transaction_log.operation_amount }} - {{ transaction_log.formatted_operation_datetime() }} </p>
     {% elif transaction_log.operation_type == 'credit' %}
-        <p class="green-text"> Кредит: +{{ transaction_log.operation_amount }} - {{ transaction_log.formatted_operation_datetime() }}</p>
+        <p class="blue-text"> Кредит: +{{ transaction_log.operation_amount }} - {{ transaction_log.formatted_operation_datetime() }}</p>
     {% elif transaction_log.operation_type == 'replenishment' %}
         <p class="green-text"> Пополнение: +{{ transaction_log.operation_amount }} - {{ transaction_log.formatted_operation_datetime() }}</p>
     {% endif %}
@@ -74,6 +78,8 @@
     {% endif %}
 
 
+
+
 <form method="post" action="{{ url_for('create_deposit') }}">
     <div><input type="submit" value="Открыть вклад"></div>
 </form>
@@ -88,6 +94,28 @@
 
 <form action="{{ url_for('logout') }}" method="post">
     <button type="submit">Выход</button>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+
+<script>
+    // Подключение к серверу через Socket.IO
+    const socket = io();
+
+    // Обработка события notifications
+    socket.on('notifications', (notifications) => {
+        // Обновление пользовательского интерфейса с уведомлениями
+        // Здесь вы можете добавить код для отображения уведомлений в вашем интерфейсе
+        console.log('Received notifications:', notifications);
+        // Пример: добавим уведомления в элемент с id="notification-container"
+        const notificationContainer = document.getElementById('notification-container');
+        notifications.forEach(notification => {
+            const notificationElement = document.createElement('div');
+            notificationElement.textContent = notification.content;
+            notificationContainer.appendChild(notificationElement);
+        });
+    });
+</script>
 </form>
 </body>
 </html>

@@ -4,12 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9fba6176-095e-4e25-8e07-98e49a62b75a" name="Changes" comment="Добавил кредиты (прототип)">
+    <list default="true" id="9fba6176-095e-4e25-8e07-98e49a62b75a" name="Changes" comment="Кредиты, история операций.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/loan_confirmation.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/loan_confirmation.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/request_loan.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/request_loan.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -165,7 +164,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705010026147</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Кредиты, история операций.">
+      <option name="closed" value="true" />
+      <created>1705067586886</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1705067586886</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -189,6 +196,7 @@
     <MESSAGE value="изменил отображение вклада в личном кабинете" />
     <MESSAGE value="Страница &quot;создать вклад&quot;. Начал учить джава скрипт, улучшил отображение полей." />
     <MESSAGE value="Добавил кредиты (прототип)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавил кредиты (прототип)" />
+    <MESSAGE value="Кредиты, история операций." />
+    <option name="LAST_COMMIT_MESSAGE" value="Кредиты, история операций." />
   </component>
 </project>
