@@ -64,7 +64,7 @@ class ClientBalance(BaseModel):
 
     class Meta:
         database = db
-        db_table = 'clientbalance'  # Specify table name explicitly
+        db_table = 'client_balance'  # Specify table name explicitly
 
 
 class Loan(Model):
