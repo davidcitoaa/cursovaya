@@ -99,20 +99,21 @@
 {% endif %}
 
 
-<form method="post" action="{{ url_for('create_deposit') }}">
-    <div><input type="submit" value="Открыть вклад"></div>
-</form>
-
-<form method="post" action="{{ url_for('create_virtual_card') }}">
-    <div><input type="submit" value="Создать виртуальную карту"></div>
-</form>
-
 <form method="post" action="{{ url_for('add_funds') }}">
     <div><input type="submit" value="Пополнить баланс"></div>
 </form>
 
+<form method="post" action="{{ url_for('create_deposit') }}">
+    <div><input type="submit" value="Открыть вклад"></div>
+</form>
+
+
 <form method="post" action="{{ url_for('request_loan') }}">
     <div><input type="submit" value="Оформить кредит"></div>
+</form>
+
+<form method="post" action="{{ url_for('create_virtual_card') }}">
+    <div><input type="submit" value="Создать виртуальную карту"></div>
 </form>
 
 <form action="{{ url_for('logout') }}" method="post">

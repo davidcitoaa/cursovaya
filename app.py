@@ -566,7 +566,8 @@ def create_virtual_card():
     if form.validate_on_submit():
         # Логика создания виртуальной карты
         expiry_date = (datetime.now() + timedelta(days=4 * 365)).strftime('%Y-%m-%d')
-
+        print(expiry_date)
+        print(datetime.now())
         # Генерация номера карты и проверка уникальности
         generated_card_number = generate_unique_card_number()
 

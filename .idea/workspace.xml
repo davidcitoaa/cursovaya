@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9fba6176-095e-4e25-8e07-98e49a62b75a" name="Changes" comment="добавил что-то типа уведомлений.">
-      <change afterPath="$PROJECT_DIR$/templates/card_info.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/create_virtual_card.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/transfer_funds.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+    <list default="true" id="9fba6176-095e-4e25-8e07-98e49a62b75a" name="Changes" comment="изменил таблицу client_balance">
       <change beforePath="$PROJECT_DIR$/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/dashboard.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -182,7 +177,23 @@
       <option name="project" value="LOCAL" />
       <updated>1705089428752</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="добавил карты. теперь их можно создавать">
+      <option name="closed" value="true" />
+      <created>1705100927820</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1705100927820</updated>
+    </task>
+    <task id="LOCAL-00011" summary="изменил таблицу client_balance">
+      <option name="closed" value="true" />
+      <created>1705101040499</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1705101040500</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -208,6 +219,8 @@
     <MESSAGE value="Добавил кредиты (прототип)" />
     <MESSAGE value="Кредиты, история операций." />
     <MESSAGE value="добавил что-то типа уведомлений." />
-    <option name="LAST_COMMIT_MESSAGE" value="добавил что-то типа уведомлений." />
+    <MESSAGE value="добавил карты. теперь их можно создавать" />
+    <MESSAGE value="изменил таблицу client_balance" />
+    <option name="LAST_COMMIT_MESSAGE" value="изменил таблицу client_balance" />
   </component>
 </project>

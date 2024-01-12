@@ -36,12 +36,10 @@
         <p>Full Name: {{ user.full_name }}</p>
         <p>Passport Data: {{ user.passport_data }}</p>
         <p>Phone: {{ user.phone }}</p>
-        <p>Expiry Date: {{ expiry_date }}</p>
         <label for="processing_agreement">
             <input type="checkbox" id="processing_agreement" name="processing_agreement" required>
-            I agree to the processing of my personal data.
+            I agree to the processing of my personal data. {{ form.submit }}
         </label>
-        <div>{{ form.submit }}</div>
 
 
 
