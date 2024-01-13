@@ -19,7 +19,7 @@ from wtforms.validators import DataRequired
 from wtforms.fields import DecimalField as DecimalFieldHTML5
 from config import Config  # Импортируем настройки
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 app.config.from_object(Config)  # Используем настройки из config.py
 
 # Конфигурация базы данных
@@ -209,7 +209,7 @@ class CardForm(FlaskForm):
 class RegisterForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
-    birth_date = DateField('Birth Date', validators=[DataRequired()], format='%Y-%B-%d')
+    birth_date = DateField('Birth Date', validators=[DataRequired()], format='%Y-%m-%d')
     passport_data = StringField('Passport Data', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
     phone = StringField('Phone', validators=[DataRequired()])
@@ -295,6 +295,7 @@ def get_hashed_password(password):
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
+        print("1")
         user = Client.create(
             full_name=form.username.data,
             birth_date=form.birth_date.data,
@@ -306,7 +307,7 @@ def register():
         login_user(user)
         return redirect(url_for('dashboard'))
 
-    return render_template('register.html', form=form)
+    return render_template('register.html', form=form, errors=form.errors)
 
 
 # Определение формы для пополнения баланса
@@ -592,7 +593,7 @@ def create_virtual_card():
     form = CardForm()
 
     # Проверка на количество созданных карт
-    if Card.select().where(Card.client_id == current_user).count() >= 1:
+    if Card.select().where(Card.client_id == current_user).count() >= 10:
         error_message = "У вас уже есть виртуальная карта."
         return render_template('create_virtual_card.html', user=current_user, form=form, error=error_message)
 

@@ -4,9 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9fba6176-095e-4e25-8e07-98e49a62b75a" name="Changes" comment="Добавлен какой-никаой фронтэнд для личного кабинета">
+    <list default="true" id="9fba6176-095e-4e25-8e07-98e49a62b75a" name="Changes" comment="нормальный фронт для главно">
+      <change afterPath="$PROJECT_DIR$/static/css/custom-style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/add_funds.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/add_funds.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/card_info.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/card_info.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/create_deposit.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/create_deposit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/create_virtual_card.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/create_virtual_card.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/loan_confirmation.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/loan_confirmation.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/request_loan.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/request_loan.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/transfer_funds.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/transfer_funds.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,17 +67,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;Python.app.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Учеба/Универ/3 курс/5 семестр/ИВС/лабы 1-3/IVS_labs/IVS_laba_2&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "Python.app.executor": "Run",
+    "Python.main.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/Учеба/Универ/3 курс/5 семестр/ИВС/лабы 1-3/IVS_labs/IVS_laba_2"
+  },
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "CSS"
+    ]
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="cursovaya" />
@@ -226,7 +243,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705121496927</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="нормальный фронт для главно">
+      <option name="closed" value="true" />
+      <created>1705125172580</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1705125172580</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -258,6 +283,7 @@
     <MESSAGE value="выводы на странице по виртуальной карте" />
     <MESSAGE value="6:25 утра. я закончил с переводами. это все. остался вронтэнд, надеюсь..." />
     <MESSAGE value="Добавлен какой-никаой фронтэнд для личного кабинета" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавлен какой-никаой фронтэнд для личного кабинета" />
+    <MESSAGE value="нормальный фронт для главно" />
+    <option name="LAST_COMMIT_MESSAGE" value="нормальный фронт для главно" />
   </component>
 </project>

@@ -4,32 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Карта</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans:400,600,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap">
+    <link rel="stylesheet" href="/static/css/custom-style.css">
 </head>
 <body>
-    <h1>Карта готова</h1>
-    <p>Номер карты: {{ card_info.card_number }}</p>
-    <p>Срок действия: {{ card_info.expiry_date }} год</p>
-    <p>ФИО: {{ card_info.full_name }}</p>
+  <header>
+    <div class="title">
+    <h1 style="font-size: 3em; text-align: center;">Кредитная организация</h1>
+</div>
+</header>
 
-    <p>Возвращение в личный кабинет через <span id="countdown">5</span> с</p>
+  <main class="container">
+    <main>
+        <div class="card">
+            <div class="card-header">
+                <h1>Карта готова</h1>
+            </div>
+            <div class="card-body">
+                <div class="card-info">
+                    <p>Номер карты: {{ card_info.card_number }}</p>
+                    <p>Срок действия: {{ card_info.expiry_date }} год</p>
+                    <p>ФИО: {{ card_info.full_name }}</p>
+                </div>
+            </div>
+            <div class="card-footer">
+                <p>Возвращение в личный кабинет через <span id="countdown">5</span> с</p>
 
-    <script>
-        var seconds = 5; // Измените это значение на желаемое количество секунд
-        var countdownElement = document.getElementById('countdown');
+                <script>
+                    var seconds = 10; // Измените это значение на желаемое количество секунд
+                    var countdownElement = document.getElementById('countdown');
 
-        function updateCountdown() {
-            countdownElement.textContent = seconds;
-            seconds--;
+                    function updateCountdown() {
+                        countdownElement.textContent = seconds;
+                        seconds--;
 
-            if (seconds < 0) {
-                window.location.href = "{{ url_for('dashboard') }}";
-            } else {
-                setTimeout(updateCountdown, 1000);
-            }
-        }
+                        if (seconds < 0) {
+                            window.location.href = "{{ url_for('dashboard') }}";
+                        } else {
+                            setTimeout(updateCountdown, 1000);
+                        }
+                    }
 
-        // Инициализация отсчета времени
-        updateCountdown();
-    </script>
+                    // Инициализация отсчета времени
+                    updateCountdown();
+                </script>
+                <a href="{{ url_for('dashboard') }}" class="card-link">Вернуться в личный кабинет</a>
+            </div>
+        </div>
+    </main>
+  </main>
 </body>
 </html>

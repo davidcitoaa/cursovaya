@@ -1,23 +1,43 @@
-<!-- templates/add_funds.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Пополнить баланс</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans:400,600,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap">
+    <link rel="stylesheet" href="/static/css/custom-style.css">
 </head>
 <body>
+<header>
+    <div class="title">
+        <h1 style="font-size: 3em; text-align: center;">Кредитная организация</h1>
+    </div>
+</header>
+
+<main>
     <h1>Пополнить баланс</h1>
 
-    Ваш баланс: {{ current_balance }} рублей<br>
-    <form method="post" action="{{ url_for('add_funds') }}">
-        {{ form.csrf_token }}
-        <div>{{ form.amount.label }} {{ form.amount }}</div>
-        <div>{{ form.submit }}</div>
-    </form>
-    <form action="{{ url_for('dashboard') }}" method="get">
-    <button type="submit">Вернуться в профиль</button>
-</form>
+    <div class="container">
+        <div class="form">
+            <div class="form-header">
+                <h2>Введите сумму для пополнения</h2>
+            </div>
+            <form method="post" action="{{ url_for('add_funds') }}">
+                {{ form.csrf_token }}
+                <div class="form-field">
+                    <label for="amount">Сумма</label>
+                    {{ form.amount }}
+                </div>
+                <div class="form-actions">
+                <button type="submit">Пополнить</button>
+            </div>
+            </form>
+        </div>
+        <div class="action">
+            <a href="{{ url_for('dashboard') }}">Вернуться в профиль</a>
+        </div>
+    </div>
+</main>
 </body>
 </html>

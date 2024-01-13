@@ -3,21 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans:400,600,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap">
+    <link rel="stylesheet" href="/static/css/custom-style.css">
 </head>
 <body>
-    <h1>Register</h1>
-    <form method="post" action="{{ url_for('register') }}">
-    {{ form.hidden_tag() }}
-    <div>{{ form.username.label }} {{ form.username }}</div>
-    <div>{{ form.password.label }} {{ form.password }}</div>
-    <div>{{ form.birth_date.label }} {{ form.birth_date(id='datepicker') }}</div>
-    <div>{{ form.passport_data.label }} {{ form.passport_data }}</div>
-    <div>{{ form.email.label }} {{ form.email }}</div>
-    <div>{{ form.phone.label }} {{ form.phone }}</div>
-    <div><input type="submit" value="Register"></div>
-</form>
+<header>
+    <div class="title">
+        <h1 style="font-size: 3em; text-align: center;">Кредитная организация</h1>
+    </div>
+</header>
 
-    <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+
+<main class="container">
+    <h1>Регистрация</h1>
+
+    <div class="form-field">
+        <form method="post" action="{{ url_for('register') }}">
+            {{ form.hidden_tag() }}
+            <div class="label-left">
+                <label for="username">ФИО</label>
+            </div>
+            <div class="form-control">
+                {{ form.username }}
+            </div>
+            <div class="label-left">
+                <label for="password">Пароль</label>
+            </div>
+            <div class="form-control">
+                {{ form.password }}
+            </div>
+            <div class="label-left">
+                <label for="birth_date">Дата рождения</label>
+            </div>
+            <div class="form-control">
+                {{ form.birth_date }}
+            </div>
+
+            <div class="label-left">
+                <label for="passport_data">Номер паспорта</label>
+            </div>
+            <div class="form-control">
+                {{ form.passport_data }}
+            </div>
+
+            <div class="label-left">
+                <label for="email">Электронная почта</label>
+            </div>
+            <div class="form-control">
+                {{ form.email }}
+            </div>
+
+            <div class="label-left">
+                <label for="phone">Номер телефона</label>
+            </div>
+            <div class="form-control">
+                {{ form.phone }}
+            </div>
+            <div class="form-actions">
+                <button type="submit">Регистрация</button>
+            </div>
+        </form>
+    </div>
+
+    <p>У вас уже есть учетная запись? <a href="{{ url_for('login') }}">Войдите здесь</a></p>
+</main>
 </body>
 </html>

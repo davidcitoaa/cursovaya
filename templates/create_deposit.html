@@ -2,14 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="custom-style.css">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Создание вклада</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans:400,600,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap">
+    <link rel="stylesheet" href="/static/css/custom-style.css">
 </head>
-<body>
+
+<header>
+    <div class="title">
+        <h1 style="font-size: 3em; text-align: center;">Кредитная организация</h1>
+    </div>
+</header>
 
 <h1>Создание вклада</h1>
 
-<form id="depositForm" action="{{ url_for('create_deposit') }}" method="post">
+<form id="depositForm" action="{{ url_for('create_deposit') }}" method="post" class="container">
     {{ form.hidden_tag() }}
 
     {% if error %}
@@ -30,19 +40,22 @@
         {{ form.duration(class="form-control") }}
     </div>
 
-    <!-- Информация о проценте и процентах в рублях -->
     <div id="rateInfo"></div>
 
-    <!-- Сообщение о недостаточности средств -->
     <div id="insufficientFunds" style="color: red;"></div>
 
-    <!-- Кнопка "Открыть вклад" -->
     <button type="submit" style="display: none;" id="openDepositBtn" class="btn btn-success">Открыть вклад</button>
+
+
 </form>
 
-<form action="{{ url_for('dashboard') }}" method="get">
-    <button type="submit">Вернуться в профиль</button>
-</form>
+<main class="container">
+    <form action="{{ url_for('dashboard') }}" method="get">
+        <button type="submit">Вернуться в профиль</button>
+    </form>
+</main>
+
+
 
 <!-- Скрипт для отображения информации о проценте и процентах в рублях -->
 <script>
