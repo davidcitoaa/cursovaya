@@ -166,6 +166,9 @@ class Card(BaseModel):
     card_number = CharField(max_length=255, unique=True)
     expiry_date = CharField(max_length=255)
 
+    def formatted_expiry_date(self):
+        return datetime.strptime(self.expiry_date, '%Y-%m-%d').strftime('%d.%m.%Y')
+
     class Meta:
         table_name = 'card'
 
@@ -360,7 +363,6 @@ def dashboard():
 
     # Получаем информацию о депозитах пользователя
     user_deposits = Deposit.select().join(Loan).where(Deposit.client_id == current_user)
-    print(user_deposits)
 
     # Получаем логин клиента
     name = user.full_name
@@ -563,7 +565,12 @@ def emit_notifications():
 def create_virtual_card():
     form = CardForm()
 
-    if form.validate_on_submit():
+    # Проверка на количество созданных карт
+    if Card.select().where(Card.client_id == current_user).count() >= 1:
+        error_message = "У вас уже есть виртуальная карта."
+        return render_template('create_virtual_card.html', user=current_user, form=form, error=error_message)
+
+    elif form.validate_on_submit():
         # Логика создания виртуальной карты
         expiry_date = (datetime.now() + timedelta(days=4 * 365)).strftime('%Y-%m-%d')
         print(expiry_date)
@@ -571,29 +578,25 @@ def create_virtual_card():
         # Генерация номера карты и проверка уникальности
         generated_card_number = generate_unique_card_number()
 
-        # Проверка на количество созданных карт
-        if Card.select().where(Card.client_id == current_user).count() < 3:
-            # Создание виртуальной карты
-            virtual_card = Card.create(client_id=current_user, card_number=generated_card_number, expiry_date=expiry_date)
-            virtual_card.save()
+        # Создание виртуальной карты
+        virtual_card = Card.create(client_id=current_user, card_number=generated_card_number, expiry_date=expiry_date)
+        virtual_card.save()
 
-            # Записываем транзакцию
-            transaction = TransactionLog.create(client_id=current_user,
-                                                operation_datetime=str(datetime.now().strftime("%c")),
-                                                operation_type='ordering a card')
-            transaction.save()
+        # Записываем транзакцию
+        transaction = TransactionLog.create(client_id=current_user,
+                                            operation_datetime=str(datetime.now().strftime("%c")),
+                                            operation_type='ordering a card')
+        transaction.save()
 
-            # Вывод информации о карте
-            card_info = {
-                'card_number': virtual_card.card_number,
-                'expiry_date': virtual_card.expiry_date,
-                'full_name': current_user.full_name,
-            }
+        # Вывод информации о карте
+        card_info = {
+            'card_number': virtual_card.card_number,
+            'expiry_date': virtual_card.formatted_expiry_date(),
+            'full_name': current_user.full_name,
+        }
 
-            return render_template('card_info.html', card_info=card_info, user=current_user, expiry_date=expiry_date)
-        else:
-            error_message = "Вы уже создали максимальное количество карт (3 карты)."
-            return render_template('create_virtual_card.html', user=current_user, form=form, error=error_message)
+        return render_template('card_info.html', card_info=card_info)
+
 
     for error in form.errors:
         print(error)

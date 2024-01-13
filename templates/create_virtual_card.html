@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Virtual Card</title>
+
 </head>
 <body>
-    <h1>Create Virtual Card</h1>
+    <h1>Заказать виртуальную карту</h1>
 
     {% if error %}
     <p class="error">{{ error }}</p>
-    Возвращение в личный кабинет через <span id="countdown">5</span> с
+    Возвращение в личный кабинет через <span id="countdown">10</span> с
 
     <script>
-        var seconds = 5; // Измените это значение на желаемое количество секунд
+        var seconds = 10; // Измените это значение на желаемое количество секунд
         var countdownElement = document.getElementById('countdown');
 
         function updateCountdown() {
@@ -30,21 +31,21 @@
         // Инициализация отсчета времени
         updateCountdown();
     </script>
-    {% endif %}
+    {% else %}
     <form method="post" action="{{ url_for('create_virtual_card') }}">
         {{ form.csrf_token }}
-        <p>Full Name: {{ user.full_name }}</p>
-        <p>Passport Data: {{ user.passport_data }}</p>
-        <p>Phone: {{ user.phone }}</p>
+
+        <p>ФИО: {{ user.full_name }}</p>
+        <p>Номер паспорта: {{ user.passport_data }}</p>
+        <p>Номер телефона: {{ user.phone }}</p>
         <label for="processing_agreement">
             <input type="checkbox" id="processing_agreement" name="processing_agreement" required>
-            I agree to the processing of my personal data. {{ form.submit }}
+            Согласие на обработку персональных данных {{ form.submit }}
         </label>
-
-
-
-
     </form>
+
+    {% endif %}
+
 
 <form action="{{ url_for('dashboard') }}" method="get">
     <button type="submit">Вернуться в профиль</button>

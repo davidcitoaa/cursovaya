@@ -26,36 +26,41 @@
 Номер телефона: {{ phone_number }}<br>
 
 
-<h2>Ваши карты</h2>
+<h2>Виртуальная карта</h2>
 {% if cards %}
 <ul>
     {% for card in cards %}
     <div class="card-info">
         <p>Карта №{{ card.card_number }}</p>
-        <p>Срок действия до {{ card.expiry_date }} года</p>
+        <p>Срок действия до {{ card.formatted_expiry_date() }} года</p>
         <br>
     </div>
     {% endfor %}
 </ul>
 {% else %}
-<p>У вас нет карт.</p>
+<p>У вас пока нет карты
+
+<form method="post" action="{{ url_for('create_virtual_card') }}">
+    <div><input type="submit" value="Заказать виртуальную карту"></div>
+</form></p>
 {% endif %}
 
 <!-- История операций -->
 <h2>История операций</h2>
+
 {% for transaction_log in transaction_logs %}
 {% if transaction_log.operation_type == 'deposit' %}
-<p class="black-text">Открытие вклада: -{{ transaction_log.operation_amount }} - {{
-    transaction_log.formatted_operation_datetime() }} </p>
+<p class="black-text">{{transaction_log.formatted_operation_datetime() }}
+    Открытие вклада: -{{ transaction_log.operation_amount }} </p>
 {% elif transaction_log.operation_type == 'credit' %}
-<p class="blue-text"> Кредит: +{{ transaction_log.operation_amount }} - {{
-    transaction_log.formatted_operation_datetime() }}</p>
+<p class=black-text">{{transaction_log.formatted_operation_datetime() }}
+    Кредит: <span class="green-text"> +{{ transaction_log.operation_amount }}</span></p>
 {% elif transaction_log.operation_type == 'replenishment' %}
-<p class="green-text"> Пополнение: +{{ transaction_log.operation_amount }} - {{
-    transaction_log.formatted_operation_datetime() }}</p>
+<p class="black-text">{{transaction_log.formatted_operation_datetime() }}
+    Пополнение: <span class="green-text"> +{{ transaction_log.operation_amount }}</span></p>
 {% elif transaction_log.operation_type == 'ordering a card' %}
-<p class="green-text"> Заказ виртуальной карты - {{
-    transaction_log.formatted_operation_datetime() }}</p>
+<p class="black-text">{{transaction_log.formatted_operation_datetime() }}
+    Заказ виртуальной карты</p>
 {% endif %}
 {% endfor %}
 
@@ -107,14 +112,11 @@
     <div><input type="submit" value="Открыть вклад"></div>
 </form>
 
-
 <form method="post" action="{{ url_for('request_loan') }}">
     <div><input type="submit" value="Оформить кредит"></div>
 </form>
 
-<form method="post" action="{{ url_for('create_virtual_card') }}">
-    <div><input type="submit" value="Создать виртуальную карту"></div>
-</form>
+
 
 <form action="{{ url_for('logout') }}" method="post">
     <button type="submit">Выход</button>
