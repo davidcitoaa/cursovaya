@@ -682,10 +682,6 @@ def transfer_funds():
                 .where(Card.card_number == recipient_card_number)
                 .get()
             )
-            # print(f'1 {recipient}')
-            # recipient = recipient.client_id.get()
-            # recipient = Client.select().where(recipient.client_id == ).get_or_none()
-            print(recipient)
         else:
             return render_template('transfer_funds.html', error="Выберите только один метод для перевода.")
 

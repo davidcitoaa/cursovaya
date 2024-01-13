@@ -1,5 +1,3 @@
-<!-- templates/dashboard.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,131 +5,224 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Личный кабинет</title>
     <style>
-        .green-text { color: green; }
-        .black-text { color: black; }
-        .blue-text {color: blue; }
-        .red-text {color: red; }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #4285f4;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .card-info, .deposit-info, .credit-info, .virtual-card-info, .replenishment-info, .transfer-info, .operation-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            margin: 10px auto;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 600px;
+        }
+
+        .green-text {
+            color: green;
+        }
+
+        .black-text {
+            color: black;
+        }
+
+        .blue-text {
+            color: blue;
+        }
+
+        .red-text {
+            color: red;
+        }
+
+        .purple-text {
+            color: purple;
+        }
+
+        .orange-text {
+            color: orange;
+        }
+
+        .ultramarine-text {
+            color: #3f26bf;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        button {
+            background-color: #4285f4;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0059c1;
+        }
+
+        .scrollable-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 10px auto;
+            text-align: left;
+        }
+
+        .operation-item span {
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .operation-item .date {
+            flex: 2;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-<h1>Личный кабинет</h1>
+    <h1>Личный кабинет</h1>
 
-<h1>Добрый день, {{ user.full_name }}!</h1>
+    <h2>Добрый день, {{ user.full_name }}!</h2>
 
-Ваш баланс: {{ current_balance }} рублей<br>
+    <p>Ваш баланс: <span class="ultramarine-text">{{ current_balance }} рублей</span></p>
 
-Имя: {{ name }}<br>
-Дата рождения: {{ date_of_birth }}<br>
+    <p>Имя: {{ name }}</p>
+    <p>Дата рождения: {{ date_of_birth }}</p>
 
-Почта: {{ email }}<br>
-Номер телефона: {{ phone_number }}<br>
+    <p>Почта: {{ email }}</p>
+    <p>Номер телефона: {{ phone_number }}</p>
 
+    <h2>Виртуальная карта</h2>
+    {% if cards %}
+        <ul>
+            {% for card in cards %}
+                <div class="card-info">
+                    <p>Карта №{{ card.card_number }}</p>
+                    <p>Срок действия до <span class="ultramarine-text">{{ card.formatted_expiry_date() }} года</span></p>
+                </div>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>У вас пока нет карты</p>
+        <form method="post" action="{{ url_for('create_virtual_card') }}">
+            <button type="submit">Заказать виртуальную карту</button>
+        </form>
+    {% endif %}
 
-<h2>Виртуальная карта</h2>
-{% if cards %}
-<ul>
-    {% for card in cards %}
-    <div class="card-info">
-        <p>Карта №{{ card.card_number }}</p>
-        <p>Срок действия до {{ card.formatted_expiry_date() }} года</p>
-        <br>
+    <!-- История операций -->
+    <h2>История операций</h2>
+    <div class="scrollable-list">
+        {% for transaction_log in transaction_logs %}
+            <div class="operation-item {{ transaction_log.operation_type }}">
+                <span class="date">{{ transaction_log.formatted_operation_datetime() }}</span>
+                <span class="amount">
+                    {% if transaction_log.operation_amount %}
+                        {% if transaction_log.operation_type in ['deposit', 'ordering a card', 'replenishment'] %}
+                            <span class="green-text">+{{ transaction_log.operation_amount }}</span>
+                        {% elif transaction_log.operation_type in ['credit', 'sending a transfer'] %}
+                            <span class="red-text">-{{ transaction_log.operation_amount }}</span>
+                        {% elif transaction_log.operation_type == 'transfer receipt' %}
+                            <span class="blue-text">+{{ transaction_log.operation_amount }}</span>
+                        {% elif transaction_log.operation_type == 'ordering a card' %}
+                            <span class="purple-text">-{{ transaction_log.operation_amount }}</span>
+                        {% elif transaction_log.operation_type == 'replenishment' %}
+                            <span class="orange-text">+{{ transaction_log.operation_amount }}</span>
+                        {% endif %}
+                    {% endif %}
+                </span>
+                <span class="description">
+                    {% if transaction_log.operation_type == 'sending a transfer' or transaction_log.operation_type == 'transfer receipt' %}
+                        Перевод {{ transaction_log.recipients_name }}
+                    {% elif transaction_log.operation_type == 'ordering a card' %}
+                        Заказ виртуальной карты
+                    {% elif transaction_log.operation_type == 'deposit' %}
+                        Открытие вклада
+                    {% elif transaction_log.operation_type == 'credit' %}
+                        Выдача кредита
+                    {% elif transaction_log.operation_type == 'replenishment' %}
+                        Пополнение
+                    {% else %}
+                        {{ transaction_log.operation_description }}
+                    {% endif %}
+                </span>
+            </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</ul>
-{% else %}
-<p>У вас пока нет карты
 
-<form method="post" action="{{ url_for('create_virtual_card') }}">
-    <div><input type="submit" value="Заказать виртуальную карту"></div>
-</form></p>
-{% endif %}
-
-<!-- История операций -->
-<h2>История операций</h2>
-
-{% for transaction_log in transaction_logs %}
-{% if transaction_log.operation_type == 'deposit' %}
-<p class="black-text">{{transaction_log.formatted_operation_datetime() }}
-    Открытие вклада <span class="red-text"> -{{ transaction_log.operation_amount }}</span></p>
-{% elif transaction_log.operation_type == 'credit' %}
-<p class=black-text">{{transaction_log.formatted_operation_datetime() }}
-    Кредит: <span class="green-text"> +{{ transaction_log.operation_amount }}</span></p>
-{% elif transaction_log.operation_type == 'replenishment' %}
-<p class="black-text">{{transaction_log.formatted_operation_datetime() }}
-    Пополнение: <span class="green-text"> +{{ transaction_log.operation_amount }}</span></p>
-{% elif transaction_log.operation_type == 'ordering a card' %}
-<p class="black-text">{{transaction_log.formatted_operation_datetime() }}
-    Заказ виртуальной карты</p>
-{% elif transaction_log.operation_type == 'sending a transfer' %}
-<p class="black-text">{{transaction_log.formatted_operation_datetime() }}
-    Перевод {{ transaction_log.recipients_name }} <span class="red-text"> -{{ transaction_log.operation_amount }}</span> </p>
-{% elif transaction_log.operation_type == 'transfer receipt' %}
-<p class="black-text">{{transaction_log.formatted_operation_datetime() }}
-    Перевод от {{ transaction_log.recipients_name }} <span class="green-text"> +{{ transaction_log.operation_amount }}</span> </p>
-{% endif %}
-{% endfor %}
-
-
-
-<h2>Ваши вклады</h2>
-{% if deposits %}
-<ul>
-    {% for deposit in deposits %}
-    <div class="deposit-info">
-        <p>Вклад №{{ loop.index }}</p>
-        <p>Сумма: {{ deposit.loan_id.amount }} рублей</p>
-        <p>Ставка {{ deposit.loan_id.interest_rate }}% годовых</p>
-        <p>В конце срока: {{ deposit.calculate_total_amount() }}</p>
-        <p>Доход +{{ calculate_interest(deposit) }} рублей</p>
-        <p>Дата открытия: {{ deposit.formatted_date_opened() }} года</p>
-        <p>Дата закрытия: {{ deposit.formatted_closing_date() }} года</p>
-        <br>
+    <h2>Ваши вклады</h2>
+    <div class="scrollable-list">
+        {% if deposits %}
+            <ul>
+                {% for deposit in deposits %}
+                    <div class="deposit-info">
+                        <p>Вклад №{{ loop.index }}</p>
+                        <p>Сумма: {{ deposit.loan_id.amount }} рублей</p>
+                        <p>Ставка <span class="ultramarine-text">{{ deposit.loan_id.interest_rate }}% годовых</span></p>
+                        <p>В конце срока: <span class="ultramarine-text">{{ deposit.calculate_total_amount() }}</span></p>
+                        <p>Доход <span class="ultramarine-text">+{{ calculate_interest(deposit) }} рублей</span></p>
+                        <p>Дата открытия: <span class="ultramarine-text">{{ deposit.formatted_date_opened() }} года</span></p>
+                        <p>Дата закрытия: <span class="ultramarine-text">{{ deposit.formatted_closing_date() }} года</span></p>
+                    </div>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>У вас нет открытых вкладов.</p>
+        {% endif %}
     </div>
-    {% endfor %}
-</ul>
-{% else %}
-<p>У вас нет открытых вкладов.</p>
-{% endif %}
 
-<h2>Ваши кредиты</h2>
-{% if credits %}
-<ul>
-    {% for credit in credits %}
-    <div class="credit-info">
-        <p>Кредит №{{ loop.index }} на сумму {{ credit.loan_id.amount }} рублей</p>
-        <p>Дата ближайшего платежа: {{ credit.formatted_next_payment_date() }} года</p>
-        <p>Ближайший платеж: {{ credit.next_payment_amount }} рублей</p>
-        <p>Дата полного погашения: {{ credit.formatted_closing_date() }} года</p>
-        <br>
+    <h2>Ваши кредиты</h2>
+    <div class="scrollable-list">
+        {% if credits %}
+            <ul>
+                {% for credit in credits %}
+                    <div class="credit-info">
+                        <p>Кредит №{{ loop.index }} на сумму <span class="ultramarine-text">{{ credit.loan_id.amount }} рублей</span></p>
+                        <p>Дата ближайшего платежа: <span class="ultramarine-text">{{ credit.formatted_next_payment_date() }} года</span></p>
+                        <p>Ближайший платеж: <span class="ultramarine-text">{{ credit.next_payment_amount }} рублей</span></p>
+                        <p>Дата полного погашения: <span class="ultramarine-text">{{ credit.formatted_closing_date() }} года</span></p>
+                    </div>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>У вас нет активных кредитов.</p>
+        {% endif %}
     </div>
-    {% endfor %}
-</ul>
-{% else %}
-<p>У вас нет активных кредитов.</p>
-{% endif %}
 
-<form method="post" action="{{ url_for('transfer_funds') }}">
-    <div><input type="submit" value="Переводы"></div>
-</form>
+    <form method="post" action="{{ url_for('transfer_funds') }}">
+        <button type="submit">Переводы</button>
+    </form>
 
-<form method="post" action="{{ url_for('add_funds') }}">
-    <div><input type="submit" value="Пополнить баланс"></div>
-</form>
+    <form method="post" action="{{ url_for('add_funds') }}">
+        <button type="submit">Пополнить баланс</button>
+    </form>
 
-<form method="post" action="{{ url_for('create_deposit') }}">
-    <div><input type="submit" value="Открыть вклад"></div>
-</form>
+    <form method="post" action="{{ url_for('create_deposit') }}">
+        <button type="submit">Открыть вклад</button>
+    </form>
 
-<form method="post" action="{{ url_for('request_loan') }}">
-    <div><input type="submit" value="Оформить кредит"></div>
-</form>
+    <form method="post" action="{{ url_for('request_loan') }}">
+        <button type="submit">Оформить кредит</button>
+    </form>
 
-
-
-<form action="{{ url_for('logout') }}" method="post">
-    <button type="submit">Выход</button>
-
-
-</form>
+    <form action="{{ url_for('logout') }}" method="post">
+        <button type="submit">Выход</button>
+    </form>
 </body>
 </html>
