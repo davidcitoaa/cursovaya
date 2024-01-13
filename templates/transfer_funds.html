@@ -3,18 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transfer Funds</title>
+    <title>Перевод</title>
 </head>
 <body>
-    <h1>Transfer Funds</h1>
-    <form method="post">
-        <label for="recipient_phone">Recipient Phone:</label>
-        <input type="text" id="recipient_phone" name="recipient_phone" required>
+    <h1>Перевод</h1>
 
-        <label for="amount">Amount:</label>
-        <input type="text" id="amount" name="amount" required>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
 
-        <button type="submit">Transfer</button>
+     Ваш баланс: {{ current_balance }} рублей<br>
+
+    <form method="post" action="{{ url_for('transfer_funds') }}">
+        {{ form.hidden_tag() }} <!-- Include CSRF token -->
+
+        <label for="transfer_method">Перевести</label>
+        {{ form.transfer_method(class="form-control") }}
+        <br>
+
+            {{ form.recipient_identifier.label }} {{ form.recipient_identifier(class="form-control", required="required") }}
+        <br>
+
+        {{ form.amount.label }} {{ form.amount(class="form-control", required="required") }}
+        <br>
+
+        <button type="submit">Перевести</button>
     </form>
+
+<form action="{{ url_for('dashboard') }}" method="get">
+    <button type="submit">Вернуться в профиль</button>
+</form>
 </body>
 </html>

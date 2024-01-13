@@ -10,6 +10,7 @@
         .green-text { color: green; }
         .black-text { color: black; }
         .blue-text {color: blue; }
+        .red-text {color: red; }
     </style>
 </head>
 <body>
@@ -51,7 +52,7 @@
 {% for transaction_log in transaction_logs %}
 {% if transaction_log.operation_type == 'deposit' %}
 <p class="black-text">{{transaction_log.formatted_operation_datetime() }}
-    Открытие вклада: -{{ transaction_log.operation_amount }} </p>
+    Открытие вклада <span class="red-text"> -{{ transaction_log.operation_amount }}</span></p>
 {% elif transaction_log.operation_type == 'credit' %}
 <p class=black-text">{{transaction_log.formatted_operation_datetime() }}
     Кредит: <span class="green-text"> +{{ transaction_log.operation_amount }}</span></p>
@@ -61,6 +62,12 @@
 {% elif transaction_log.operation_type == 'ordering a card' %}
 <p class="black-text">{{transaction_log.formatted_operation_datetime() }}
     Заказ виртуальной карты</p>
+{% elif transaction_log.operation_type == 'sending a transfer' %}
+<p class="black-text">{{transaction_log.formatted_operation_datetime() }}
+    Перевод {{ transaction_log.recipients_name }} <span class="red-text"> -{{ transaction_log.operation_amount }}</span> </p>
+{% elif transaction_log.operation_type == 'transfer receipt' %}
+<p class="black-text">{{transaction_log.formatted_operation_datetime() }}
+    Перевод от {{ transaction_log.recipients_name }} <span class="green-text"> +{{ transaction_log.operation_amount }}</span> </p>
 {% endif %}
 {% endfor %}
 
@@ -103,6 +110,9 @@
 <p>У вас нет активных кредитов.</p>
 {% endif %}
 
+<form method="post" action="{{ url_for('transfer_funds') }}">
+    <div><input type="submit" value="Переводы"></div>
+</form>
 
 <form method="post" action="{{ url_for('add_funds') }}">
     <div><input type="submit" value="Пополнить баланс"></div>

@@ -62,6 +62,20 @@ class ClientBalance(BaseModel):
     client_id = ForeignKeyField(Client, backref='balance')
     balance = FloatField()
 
+    def reduce_balance(self, amount):
+        current_balance = self.balance
+        # Обновляем баланс пользователя
+        updated_balance = current_balance - amount
+        self.balance = updated_balance
+        self.save()
+
+    def increase_balance(self, amount):
+        current_balance = self.balance
+        # Обновляем баланс пользователя
+        updated_balance = current_balance + amount
+        self.balance = updated_balance
+        self.save()
+
     class Meta:
         database = db
         db_table = 'client_balance'  # Specify table name explicitly
@@ -140,6 +154,7 @@ class TransactionLog(BaseModel):
     operation_datetime = CharField(max_length=255)
     operation_type = CharField(max_length=255)
     operation_amount = FloatField()
+    recipients_name = CharField(max_length=255)
 
     def formatted_operation_datetime(self):
         return datetime.strptime(self.operation_datetime, '%Y-%m-%d %H:%M:%S').strftime('%d.%m.%Y %H:%M')
@@ -176,7 +191,7 @@ class Card(BaseModel):
 # Функция для создания уведомления
 def create_notification(client, notification_type, content_data):
     notification = Notification.create(client_id=client, notification_type=notification_type, content_data=content_data,
-                        send_datetime=datetime.now().strftime("%c"))
+                                       send_datetime=datetime.now().strftime("%c"))
     notification.save()
 
 
@@ -185,8 +200,10 @@ class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
 
+
 class CardForm(FlaskForm):
     submit = SubmitField('Создать')
+
 
 # Определение формы для регистрации
 class RegisterForm(FlaskForm):
@@ -196,6 +213,7 @@ class RegisterForm(FlaskForm):
     passport_data = StringField('Passport Data', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
     phone = StringField('Phone', validators=[DataRequired()])
+
 
 class DepositForm(FlaskForm):
     duration = SelectField(
@@ -297,6 +315,13 @@ class AddFundsForm(FlaskForm):
     submit = SubmitField('Пополнить')
 
 
+class TransferFundsForm(FlaskForm):
+    transfer_method = SelectField('Перевести', choices=[('phone', 'по номеру телефона'), ('card', 'по номеру карты')],
+                                  validators=[DataRequired()])
+    recipient_identifier = StringField('Номер', validators=[DataRequired()])
+    amount = DecimalField('Сумма', validators=[DataRequired()])
+
+
 # Маршрут для пополнения баланса
 @app.route('/add_funds', methods=['GET', 'POST'])
 @login_required
@@ -334,15 +359,15 @@ def add_funds():
     else:
         for error in form.errors:
             print(error)
-    user_balance = getClientBalance()
+    user_balance = getClientBalance(current_user)
 
     return render_template('add_funds.html', form=form, current_balance=user_balance)
 
 
-def getClientBalance():
-    client_balance = ClientBalance.get_or_none(client_id=current_user.client_id)
+def getClientBalance(user):
+    client_balance = ClientBalance.get_or_none(client_id=user.client_id)
     if client_balance is None:
-        client_balance = ClientBalance.create(client_id=current_user, balance=0.0)
+        client_balance = ClientBalance.create(client_id=user, balance=0.0)
         client_balance.save()
 
     balance_value = client_balance.balance
@@ -409,7 +434,7 @@ def logout():
 @login_required
 def create_deposit():
     form = DepositForm()
-    user_balance = getClientBalance()
+    user_balance = getClientBalance(current_user)
     if form.validate_on_submit():
         amount = float(form.amount.data)
 
@@ -547,6 +572,7 @@ def handle_connect():
     # Отправить уведомления при подключении
     emit_notifications()
 
+
 def emit_notifications():
     # Функция для отправки уведомлений на клиент
     # Замените этот код на ваш код получения уведомлений из базы данных
@@ -597,10 +623,10 @@ def create_virtual_card():
 
         return render_template('card_info.html', card_info=card_info)
 
-
     for error in form.errors:
         print(error)
     return render_template('create_virtual_card.html', user=current_user, form=form)
+
 
 # @app.route('/card_info', methods=['GET', 'POST'])
 # @login_required
@@ -637,53 +663,74 @@ def generate_unique_card_number():
 @app.route('/transfer_funds', methods=['GET', 'POST'])
 @login_required
 def transfer_funds():
+    form = TransferFundsForm()
+    balance = getClientBalance(current_user)
 
+    if form.validate_on_submit():
+        transfer_method = form.transfer_method.data
+        amount = float(form.amount.data)
 
-    if request.method == 'POST':
-        recipient_phone = request.form.get('recipient_phone')
-        amount = float(request.form.get('amount'))
-
-        # Логика поиска пользователя по номеру телефона
-        recipient = Client.get_or_none(Client.phone == recipient_phone)
+        if transfer_method == 'phone':
+            recipient_phone = form.recipient_identifier.data
+            recipient = Client.get_or_none(Client.phone == recipient_phone)
+        elif transfer_method == 'card':
+            recipient_card_number = form.recipient_identifier.data
+            recipient = (
+                Client
+                .select()
+                .join(Card)  # Join with the Card model
+                .where(Card.card_number == recipient_card_number)
+                .get()
+            )
+            # print(f'1 {recipient}')
+            # recipient = recipient.client_id.get()
+            # recipient = Client.select().where(recipient.client_id == ).get_or_none()
+            print(recipient)
+        else:
+            return render_template('transfer_funds.html', error="Выберите только один метод для перевода.")
 
         if recipient:
+            print(recipient)
             # Логика перевода средств
             sender_balance = current_user.balance.get()
 
             if sender_balance.balance >= amount:
                 # Вычитаем сумму перевода из баланса отправителя
-                sender_balance.balance -= amount
-                sender_balance.save()
+                sender_balance.reduce_balance(amount)
 
+                recipient_balance = getClientBalance(recipient)
+
+                recipient.balance.get().increase_balance(amount)
                 # Получаем баланс получателя или создаем новую запись
-                recipient_balance = recipient.balance.get_or_create()
-                recipient_balance.balance += amount
-                recipient_balance.save()
+                # recipient_balance = recipient.balance.get_or_create()
+                # recipient_balance.increase_balance(amount)
 
-                # Записываем транзакцию
+                # Записываем транзакции
                 transaction = TransactionLog.create(client_id=current_user,
                                                     operation_datetime=str(datetime.now().strftime("%c")),
-                                                    operation_type='transfer',
-                                                    operation_amount=amount)
+                                                    operation_type='sending a transfer',
+                                                    operation_amount=amount,
+                                                    recipients_name=recipient.full_name)
                 transaction.save()
 
-                # Создаем транзакцию для получателя
                 recipient_transaction = TransactionLog.create(client_id=recipient,
-                                                               operation_datetime=str(datetime.now().strftime("%c")),
-                                                               operation_type='transfer',
-                                                               operation_amount=amount)
+                                                              operation_datetime=str(datetime.now().strftime("%c")),
+                                                              operation_type='transfer receipt',
+                                                              operation_amount=amount,
+                                                              recipients_name=current_user.full_name)
                 recipient_transaction.save()
 
-                # Возвращение на дашборд после перевода
+                # Возвращение в личный кабинет после перевода
                 return redirect(url_for('dashboard'))
             else:
                 error_message = "Недостаточно средств на балансе."
         else:
-            error_message = "Пользователь с указанным номером телефона не найден."
+            error_message = "Получатель не найден."
 
-        return render_template('transfer_funds.html', error=error_message)
+        return render_template('transfer_funds.html', error=error_message,form=form, current_balance=balance)
 
-    return render_template('transfer_funds.html')
+    return render_template('transfer_funds.html', current_balance=balance, form=form)
+
 
 if __name__ == '__main__':
     db.connect()
