@@ -12,8 +12,8 @@
 <body>
 <header>
     <div class="title">
-    <h1 style="font-size: 3em; text-align: center;">Кредитная организация</h1>
-</div>
+        <h1 style="font-size: 3em; text-align: center;">Кредитная организация</h1>
+    </div>
 </header>
 
 <main>
@@ -35,27 +35,20 @@
                 <p>Карта №{{ card.card_number }}</p>
                 <p>Срок действия до <span class="ultramarine-text">{{ card.formatted_expiry_date() }} года</span></p>
             </li>
-            <form method="post" action="{{ url_for('create_virtual_card') }}">
-            <button type="submit">
-                <i class="icon fa fa-money"></i>
-                <span class="text">Заказать виртуальную карту</span>
-            </button>
-        </form>
+
             {% endfor %}
         </ul>
         {% else %}
         <p>У вас пока нет карты</p>
-       <form method="post" action="{{ url_for('create_virtual_card') }}">
-            <button type="submit">
-                <i class="icon fa fa-money"></i>
-                <span class="text">Заказать виртуальную карту</span>
-            </button>
+        <form action="{{ url_for('create_virtual_card') }}" method="get">
+            <button type="submit" class="button-style">Заказать виртуальную карту</button>
         </form>
         {% endif %}
     </div>
 
     <div class="operations">
         <h2>История операций</h2>
+        {% if cards %}
         <ul>
             {% for transaction_log in transaction_logs %}
             <li class="operation-item {{ transaction_log.operation_type }}">
@@ -76,8 +69,10 @@
                             {% endif %}
                         </span>
                 <span class="description">
-                            {% if transaction_log.operation_type == 'sending a transfer' or transaction_log.operation_type == 'transfer receipt' %}
-                                <span class="blue-text">{{ transaction_log.recipients_name }}</span>
+                            {% if transaction_log.operation_type == 'transfer receipt' %}
+                                <span class="blue-text">Перевод от клиента {{ transaction_log.recipients_name }}</span>
+                            {% elif transaction_log.operation_type == 'sending a transfer' %}
+                                <span class="purple-text">Перевод клиенту {{ transaction_log.recipients_name }}</span>
                             {% elif transaction_log.operation_type == 'ordering a card' %}
                                 <span class="purple-text">Заказ виртуальной карты</span>
                             {% elif transaction_log.operation_type == 'deposit' %}
@@ -93,6 +88,10 @@
             </li>
             {% endfor %}
         </ul>
+        {% else %}
+        <p>Нет операций</p>
+        {% endif %}
+
     </div>
 
     <div class="deposits">
@@ -137,44 +136,47 @@
         {% endif %}
     </div>
 
-    <form class="container">
+
+    <br><br>
+
+
+    <div class="container" style="flex-direction: row; position: fixed; bottom: 0; width: 100%;">
+
 
         <form method="post" action="{{ url_for('transfer_funds') }}">
-            <button type="submit">
+            <button type="submit" class="button-style" style="margin-left: 10px;">
                 <span class="text">Переводы</span>
             </button>
         </form>
 
+        <form method="post" action="{{ url_for('create_deposit') }}">
+            <button type="submit" class="button-style" style="margin-left: 10px;">
+                <span class="text">Открыть вклад</span>
+            </button>
+        </form>
+
         <form method="post" action="{{ url_for('add_funds') }}">
-            <button type="submit">
-                <i class="icon fa fa-money"></i>
+            <button type="submit" class="button-style" style="margin-left: 10px;">
                 <span class="text">Пополнить баланс</span>
             </button>
         </form>
 
         <form method="post" action="{{ url_for('request_loan') }}">
-            <button type="submit">
-                <i class="icon fa fa-credit-card"></i>
+            <button type="submit" class="button-style" style="margin-left: 10px;">
                 <span class="text">Оформить кредит</span>
             </button>
         </form>
 
-        <form method="post" action="{{ url_for('create_deposit') }}">
-            <button type="submit">
-                <i class="icon fa fa-piggy-bank"></i>
-                <span class="text">Открыть вклад</span>
-            </button>
-        </form>
-
-        <form action="{{ url_for('logout') }}" method="post">
-            <button type="submit">
-                <i class="icon fa fa-sign-out"></i>
+        <form method="post" action="{{ url_for('logout') }}">
+            <button type="submit" class="button-style" style="margin-left: 10px;">
                 <span class="text">Выход</span>
             </button>
         </form>
     </div>
-        </div>
-    </form>
+
+
 </main>
+
+
 </body>
 </html>

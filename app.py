@@ -593,7 +593,7 @@ def create_virtual_card():
     form = CardForm()
 
     # Проверка на количество созданных карт
-    if Card.select().where(Card.client_id == current_user).count() >= 10:
+    if Card.select().where(Card.client_id == current_user).count() >= 1:
         error_message = "У вас уже есть виртуальная карта."
         return render_template('create_virtual_card.html', user=current_user, form=form, error=error_message)
 

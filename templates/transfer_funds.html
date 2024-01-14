@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Перевод</title>
+    <title>Переводы</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans:400,600,700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap">
     <link rel="stylesheet" href="/static/css/custom-style.css">
@@ -15,49 +15,47 @@
     </div>
 </header>
 
-    <main>
-        <div class="container">
-            <div class="header">
-                <h1>Перевод</h1>
+<main>
+    <div class="container">
+        <h1>Переводы</h1>
+
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="balance-info">
+            Ваш баланс: {{ current_balance }} рублей
+        </div>
+
+        <form method="post" action="{{ url_for('transfer_funds') }}">
+            {{ form.hidden_tag() }}
+
+            <div class="form-field form-field-center">
+                <label for="transfer_method">Перевести</label>
+                {{ form.transfer_method(class="form-control") }}
             </div>
 
-            {% if error %}
-                <div class="error-message">
-                    {{ error }}
-                </div>
-            {% endif %}
-
-            <div class="balance-info">
-                 Ваш баланс: {{ current_balance }} рублей
+            <div class="form-field form-field-center">
+                {{ form.recipient_identifier.label }}
+                {{ form.recipient_identifier(class="form-control", required="required") }}
             </div>
 
-            <form method="post" action="{{ url_for('transfer_funds') }}">
-                {{ form.hidden_tag() }}
-
-                <div class="form-field form-field-center">
-                    <label for="transfer_method">Перевести</label>
-                    {{ form.transfer_method(class="form-control") }}
-                </div>
-
-                <div class="form-field form-field-center">
-                    {{ form.recipient_identifier.label }}
-                    {{ form.recipient_identifier(class="form-control", required="required") }}
-                </div>
-
-                <div class="form-field form-field-center">
-                    {{ form.amount.label }}
-                    {{ form.amount(class="form-control", required="required") }}
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit">Перевести</button>
-                </div>
-            </form>
+            <div class="form-field form-field-center">
+                {{ form.amount.label }}
+                {{ form.amount(class="form-control", required="required") }}
+            </div>
 
             <div class="form-actions">
-                <a href="{{ url_for('dashboard') }}" class="form-link">Вернуться в профиль</a>
+                <button type="submit">Перевести</button>
             </div>
-        </div>
-    </main>
+        </form>
+
+        <form action="{{ url_for('dashboard') }}" method="get">
+            <button type="submit" class="button-style">Вернуться в профиль</button>
+        </form>
+    </div>
+</main>
 </body>
 </html>

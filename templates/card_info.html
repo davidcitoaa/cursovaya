@@ -9,13 +9,13 @@
     <link rel="stylesheet" href="/static/css/custom-style.css">
 </head>
 <body>
-  <header>
+<header>
     <div class="title">
-    <h1 style="font-size: 3em; text-align: center;">Кредитная организация</h1>
-</div>
+        <h1 style="font-size: 3em; text-align: center;">Кредитная организация</h1>
+    </div>
 </header>
 
-  <main class="container">
+<main class="container">
     <main>
         <div class="card">
             <div class="card-header">
@@ -49,10 +49,12 @@
                     // Инициализация отсчета времени
                     updateCountdown();
                 </script>
-                <a href="{{ url_for('dashboard') }}" class="card-link">Вернуться в личный кабинет</a>
+                <form action="{{ url_for('dashboard') }}" method="get">
+                    <button type="submit" class="button-style">Вернуться в профиль</button>
+                </form>
             </div>
         </div>
     </main>
-  </main>
+</main>
 </body>
 </html>

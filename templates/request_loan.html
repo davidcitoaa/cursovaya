@@ -18,6 +18,8 @@
     </div>
 </header>
 
+<main class="container">
+
 <h1>Запрос на кредит</h1>
 
 <form id="loanRequestForm" action="{{ url_for('request_loan') }}" method="post">
@@ -27,25 +29,27 @@
     <p class="error">{{ error }}</p>
     {% endif %}
 
-    <div class="form-group">
+    <div class="form-field">
         <label for="amount">Желаемая сумма кредита</label>
         {{ form.amount(id="amountInput", class="form-control") }}
     </div>
 
-    <div class="form-group">
+    <div class="form-field">
         <label for="duration">Срок кредита (в годах)</label>
         {{ form.duration(class="form-control") }}
     </div>
 
+
+
     <p id="interestRateOutput"></p>
     <p id="monthlyPaymentOutput"></p>
 
-    <button type="submit" class="btn btn-success">Отправить запрос</button>
+    <button type="submit" class="button-style">Отправить запрос</button>
 </form>
 
 <form action="{{ url_for('dashboard') }}" method="get">
-    <button type="submit">Вернуться в профиль</button>
-</form>
+        <button type="submit" class="button-style">Вернуться в профиль</button>
+    </form>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -91,6 +95,6 @@
     });
 </script>
 
-
+</main>
 </body>
 </html>

@@ -17,44 +17,43 @@
     </div>
 </header>
 
-<h1>Создание вклада</h1>
-
-<form id="depositForm" action="{{ url_for('create_deposit') }}" method="post" class="container">
-    {{ form.hidden_tag() }}
-
-    {% if error %}
-    <p class="error">{{ error }}</p>
-    {% endif %}
-    Ваш баланс: {{ current_balance }} рублей<br>
-
-    <div class="form-group">
-        <label for="amount">Сумма от 100 рублей</label>
-        {{ form.amount(id="amountInput", class="form-control") }}
-    </div>
-
-    <div id="insufficientMinAmount" style="color: red;"></div>
-
-
-    <div class="form-group">
-        <label for="duration">Срок</label>
-        {{ form.duration(class="form-control") }}
-    </div>
-
-    <div id="rateInfo"></div>
-
-    <div id="insufficientFunds" style="color: red;"></div>
-
-    <button type="submit" style="display: none;" id="openDepositBtn" class="btn btn-success">Открыть вклад</button>
-
-
-</form>
-
 <main class="container">
+    <h1>Создание вклада</h1>
+
+    <form id="depositForm" action="{{ url_for('create_deposit') }}" method="post" class="container">
+        {{ form.hidden_tag() }}
+
+        {% if error %}
+        <p class="error">{{ error }}</p>
+        {% endif %}
+        Ваш баланс: {{ current_balance }} рублей<br>
+
+        <div class="form-field">
+            <label for="amount">Сумма от 100 рублей</label>
+            {{ form.amount(id="amountInput", class="form-control") }}
+        </div>
+
+        <div id="insufficientMinAmount" style="color: red;"></div>
+
+
+        <div class="form-group">
+            <label for="duration">Срок</label>
+            {{ form.duration(class="form-control") }}
+        </div>
+
+        <div id="rateInfo"></div>
+
+        <div id="insufficientFunds" style="color: red;"></div>
+
+        <button type="submit" style="display: none;" id="openDepositBtn" class="button-style">Открыть вклад</button>
+
+
+    </form>
+
     <form action="{{ url_for('dashboard') }}" method="get">
-        <button type="submit">Вернуться в профиль</button>
+        <button type="submit" class="button-style">Вернуться в профиль</button>
     </form>
 </main>
-
 
 
 <!-- Скрипт для отображения информации о проценте и процентах в рублях -->

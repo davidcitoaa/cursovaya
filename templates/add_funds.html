@@ -16,9 +16,9 @@
 </header>
 
 <main>
-    <h1>Пополнить баланс</h1>
 
     <div class="container">
+
         <div class="form">
             <div class="form-header">
                 <h2>Введите сумму для пополнения</h2>
@@ -30,13 +30,13 @@
                     {{ form.amount }}
                 </div>
                 <div class="form-actions">
-                <button type="submit">Пополнить</button>
-            </div>
+                    <button type="submit">Пополнить</button>
+                </div>
             </form>
         </div>
-        <div class="action">
-            <a href="{{ url_for('dashboard') }}">Вернуться в профиль</a>
-        </div>
+        <form action="{{ url_for('dashboard') }}" method="get">
+            <button type="submit" class="button-style">Вернуться в профиль</button>
+        </form>
     </div>
 </main>
 </body>
