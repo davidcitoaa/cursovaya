@@ -1,0 +1,83 @@
+[
+    {
+        "id": 20055,
+        "full_name": "Давид Арзамасцев",
+        "birth_date": "2003-02-25",
+        "passport_data": "144254245",
+        "email": "david@yandex.ru",
+        "phone": "+79155278407",
+        "password": "23b339ea4c6160c0c5e3430597c6e4dbb7a0185dded7b924b1efb31860d07d83"
+    },
+    {
+        "id": 20046,
+        "full_name": "Мариамь Арзамасцева",
+        "birth_date": "2008-05-11",
+        "passport_data": "465465465",
+        "email": "davidok2003@yandex.ru",
+        "phone": "+79192881601",
+        "password": "23b339ea4c6160c0c5e3430597c6e4dbb7a0185dded7b924b1efb31860d07d83"
+    },
+    {
+        "id": 20054,
+        "full_name": "Мирра Арзамасцева",
+        "birth_date": "2006-03-09",
+        "passport_data": "154654646",
+        "email": "d@ta.ru",
+        "phone": "+79155725332",
+        "password": "23b339ea4c6160c0c5e3430597c6e4dbb7a0185dded7b924b1efb31860d07d83"
+    },
+    {
+        "id": 20056,
+        "full_name": "Ивонн Сото",
+        "birth_date": "2001-01-11",
+        "passport_data": "784122457",
+        "email": "iv@yandex.ru",
+        "phone": "+79202081751",
+        "password": "23b339ea4c6160c0c5e3430597c6e4dbb7a0185dded7b924b1efb31860d07d83"
+    },
+    {
+        "id": 20048,
+        "full_name": "as",
+        "birth_date": "2008-03-11",
+        "passport_data": "65466546",
+        "email": "as@adfa.ru",
+        "phone": "+79145145365",
+        "password": "23b339ea4c6160c0c5e3430597c6e4dbb7a0185dded7b924b1efb31860d07d83"
+    },
+    {
+        "id": 20154,
+        "full_name": "Артем",
+        "birth_date": "1982-06-03",
+        "passport_data": "dfasfdaf244",
+        "email": "asdfasfavidok2003@yandex.ru",
+        "phone": "+79040855046",
+        "password": "cedafc3ed937acc87b601fa6d60b29df6804ccd935e4f54e5a7c2400253e82ae"
+    },
+    {
+        "id": 20155,
+        "full_name": "Арзамасцев Руслан",
+        "birth_date": "2015-09-05",
+        "passport_data": "master300",
+        "email": "rus@yandex.ru",
+        "phone": "+79152458756",
+        "password": "23b339ea4c6160c0c5e3430597c6e4dbb7a0185dded7b924b1efb31860d07d83"
+    },
+    {
+        "id": 20156,
+        "full_name": "Арзамасцев Руслан",
+        "birth_date": "2003-12-02",
+        "passport_data": "master300",
+        "email": "d@sgs.ru",
+        "phone": "+79145451232",
+        "password": "23b339ea4c6160c0c5e3430597c6e4dbb7a0185dded7b924b1efb31860d07d83"
+    },
+    {
+        "id": 20157,
+        "full_name": "Иван Иванов",
+        "birth_date": "1980-01-01",
+        "passport_data": "24ivonne04",
+        "email": "ivan@yandex.ru",
+        "phone": "+79802502525",
+        "password": "50b0505bc3c8beda218dd44cac34fe5ea726e4dda20be05275195191babb02f3"
+    }
+]

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Выгрузка данных</title>
+</head>
+<body>
+    <main class="container">
+
+
+    <h1>Выгрузка данных</h1>
+
+    <form action="/dashboard/export" method="post">
+        {{ form.csrf_token }}
+        <div class="form-group">
+            <label for="tables">Срок</label>
+            {{ form.tables(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            <label for="format">Срок</label>
+            {{ form.format(class="form-control") }}
+        </div>
+
+        <div class="form-field">
+                    <label for="file_name"> Имя файла</label>
+                    {{ form.file_name }}
+        </div>
+
+        <input type="submit" value="Export">
+    </form>
+
+
+    {% if form.errors %}
+        <div class="errors">
+            {% for error in form.errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    </main>
+
+</body>
+</html>

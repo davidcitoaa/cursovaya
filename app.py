@@ -1,14 +1,21 @@
+import csv
 import hashlib
+import json
+import os
 import random
 import string
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time, date
+from decimal import Decimal
+from msilib.text import tables
 
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_socketio import SocketIO
+from flask_wtf.recaptcha import fields
 from peewee import *
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from playhouse.postgres_ext import DateTimeTZField
+from playhouse.shortcuts import model_to_dict
 from wtforms import StringField, PasswordField, DateField
 from wtforms.fields.choices import SelectField
 from wtforms.fields.simple import SubmitField
@@ -213,6 +220,17 @@ class RegisterForm(FlaskForm):
     passport_data = StringField('Passport Data', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
     phone = StringField('Phone', validators=[DataRequired()])
+
+
+print(db.get_tables())
+
+
+class UploadDataForm(FlaskForm):
+    tables = SelectField('Выбрать таблицы', choices=[
+        (table, table) for table in db.get_tables()
+    ])
+    format = SelectField('Формат', choices=[('json', 'JSON'), ('csv', 'CSV')])
+    file_name = StringField('Имя файла')
 
 
 class DepositForm(FlaskForm):
@@ -724,9 +742,117 @@ def transfer_funds():
         else:
             error_message = "Получатель не найден."
 
-        return render_template('transfer_funds.html', error=error_message,form=form, current_balance=balance)
+        return render_template('transfer_funds.html', error=error_message, form=form, current_balance=balance)
 
     return render_template('transfer_funds.html', current_balance=balance, form=form)
+
+# Форма для загрузки данных
+class UploadDataForm(FlaskForm):
+    tables = SelectField('Выбрать таблицы', choices=[
+        (model._meta.table_name, model._meta.table_name) for model in
+        [Client, ClientBalance, Loan, Deposit, Credit, TransactionLog, Notification, Card]
+    ])
+    format = SelectField('Формат', choices=[('json', 'JSON'), ('csv', 'CSV')])
+    file_name = StringField('Имя файла')
+
+
+# Роут для страницы загрузки данных
+@app.route('/upload_data', methods=['GET', 'POST'])
+@login_required
+def upload_data():
+    form = UploadDataForm()
+
+    if form.validate_on_submit():
+        selected_table = form.tables.data
+        selected_format = form.format.data
+        file_name = form.file_name.data
+
+        # Получите данные из базы данных (пример)
+        model_class = Client.get()  # Получаем класс модели по имени таблицы
+        data_from_db = model_class.select().dicts()
+
+        # Создайте файл в выбранном формате
+        if selected_format == 'json':
+            export_to_json([model_to_dict(row) for row in data_from_db], f'{file_name}.json')
+        elif selected_format == 'csv':
+            export_to_csv(data_from_db, f'{file_name}.csv')
+
+        flash(f'Данные из таблицы {selected_table} успешно выгружены в формате {selected_format}', 'success')
+        return redirect(url_for('upload_data'))
+
+    return render_template('upload_data.html', form=form)
+
+class CustomEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)
+        elif isinstance(obj, (time, datetime)):
+            return obj.isoformat()
+        elif isinstance(obj, date):
+            return str(obj)
+        elif isinstance(obj, timedelta):
+            return str(obj)
+        return super().default(obj)
+
+# Функция для экспорта данных в CSV
+def export_to_csv(data, headers, file_name):
+    with open(file_name, 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(headers)
+        writer.writerows(data)
+
+
+# Функция для экспорта данных в JSON
+def export_to_json(data, file_name):
+    with open(file_name, 'w', encoding='utf-8') as jsonfile:
+        json.dump(data, jsonfile, ensure_ascii=False, indent=4, cls=CustomEncoder)
+
+
+
+
+# Маршрут для страницы со списком всех новостей
+@app.route('/save')
+@login_required
+def save():
+    # client
+    clients = Client.select()
+
+    # Подготовка данных для экспорта в JSON
+    credits_json = [
+        {'id': c.client_id, 'full_name': c.full_name, 'birth_date': c.birth_date, 'passport_data': c.passport_data,
+         'email': c.email, 'phone': c.phone, 'password': c.password}
+        for c in clients]
+    export_to_json(credits_json, 'client_data.json')
+
+    # Подготовка данных для экспорта в CSV
+    clients_csv = [[c.client_id, c.full_name, c.birth_date, c.email, c.phone, c.password] for c in clients]
+    print(clients_csv)
+    headers = ['id', 'full_name', 'birth_date', 'passport_data', 'email', 'passport_data', 'phone', 'password', ]
+    export_to_csv(clients_csv, headers, 'client_data.csv')
+
+    # credits
+    credits = Credit.select()
+
+    # Подготовка данных для экспорта в JSON
+    result_json = [
+        {'credit_id': r.credit_id,
+         'client_id': r.client_id.client_id,
+         'closing_date': r.closing_date,
+         'next_payment_date': r.next_payment_date,
+         'next_payment_amount': r.next_payment_amount,
+         'loan_id': r.loan_id.loan_id,
+         'date_opened': r.date_opened
+         }
+        for r in credits]
+    export_to_json(result_json, 'credits_data.json')
+
+    # Подготовка данных для экспорта в CSV
+    table_csv = [[r.credit_id, r.client_id, r.closing_date, r.next_payment_date, r.next_payment_amount, r.loan_id, r.date_opened] for r in credits]
+    print(table_csv)
+    headers = ['credit_id', 'client_id', 'closing_date', 'next_payment_date', 'next_payment_amount', 'loan_id', 'date_opened']
+    export_to_csv(table_csv, headers, 'credits_data.csv')
+
+    return redirect(url_for('dashboard'))
 
 
 if __name__ == '__main__':

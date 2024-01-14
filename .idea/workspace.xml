@@ -4,17 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9fba6176-095e-4e25-8e07-98e49a62b75a" name="Changes" comment="добавил некий общий фронт">
+    <list default="true" id="9fba6176-095e-4e25-8e07-98e49a62b75a" name="Changes" comment="добавил фронт">
+      <change afterPath="$PROJECT_DIR$/templates/export.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/upload_data.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/custom-style.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/custom-style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/add_funds.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/add_funds.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/card_info.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/card_info.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/create_deposit.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/create_deposit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/create_virtual_card.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/create_virtual_card.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/request_loan.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/request_loan.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/transfer_funds.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/transfer_funds.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -255,7 +251,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705183011934</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="добавил фронт">
+      <option name="closed" value="true" />
+      <created>1705247984749</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1705247984749</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -289,6 +293,7 @@
     <MESSAGE value="Добавлен какой-никаой фронтэнд для личного кабинета" />
     <MESSAGE value="нормальный фронт для главно" />
     <MESSAGE value="добавил некий общий фронт" />
-    <option name="LAST_COMMIT_MESSAGE" value="добавил некий общий фронт" />
+    <MESSAGE value="добавил фронт" />
+    <option name="LAST_COMMIT_MESSAGE" value="добавил фронт" />
   </component>
 </project>
