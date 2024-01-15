@@ -16,18 +16,30 @@
         <h1 style="font-size: 3em; text-align: center;">Кредитная организация</h1>
     </div>
 </header>
+
+<main class="container">
     <h1>Добро пожаловать в кредитную организацию!</h1>
 
     {% if current_user.is_authenticated %}
-        <p>Вы вошли в аккаунт.<a href="{{ url_for('dashboard') }}">Зайти в личный кабинет</a></p>
-        <form action="{{ url_for('logout') }}" method="post">
-            <button type="submit">Logout</button>
-        </form>
-    {% else %}
-        <p>Если у вас есть аккаунт, <a href="{{ url_for('login') }}">войдите</a>.</p>
-        <p>Если у вас нет аккаунта, пожалуйста, <a href="{{ url_for('register') }}">зарегистрируйтесь</a>.</p>
-    {% endif %}
+            <p>Вы вошли в аккаунт. </p>
+            <form method="get" action="{{ url_for('dashboard') }}">
+                <button type="submit" class="button-style">Зайти в личный кабинет</button>
+            </form>
+            <form action="{{ url_for('logout') }}" method="post">
+                <button type="submit" class="button-style">Выйти</button>
+            </form>
+        {% else %}
+            <p>Если у вас есть аккаунт, войдите.</p>
+            <form method="get" action="{{ url_for('login') }}">
+                <button type="submit" class="button-style">Войти</button>
+            </form>
 
+            <p>Если у вас нет аккаунта, пожалуйста, зарегистрируйтесь.</p>
+            <form method="get" action="{{ url_for('register') }}">
+                <button type="submit" class="button-style">Зарегистрироваться</button>
+            </form>
+        {% endif %}
 
+</main>
 </body>
 </html>

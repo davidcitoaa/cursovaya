@@ -1,0 +1,16 @@
+[
+    {
+        "deposit_id": 54,
+        "client_id": 20055,
+        "closing_date": "2026-01-03",
+        "loan_id": 20161,
+        "date_opened": "2024-01-14"
+    },
+    {
+        "deposit_id": 55,
+        "client_id": 20055,
+        "closing_date": "2025-07-08",
+        "loan_id": 20164,
+        "date_opened": "2024-01-15"
+    }
+]

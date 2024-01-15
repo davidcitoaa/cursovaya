@@ -1,0 +1,26 @@
+[
+    {
+        "loan_id": 20162,
+        "amount": 10000.0,
+        "interest_rate": 8.0,
+        "type": "Кредит"
+    },
+    {
+        "loan_id": 20163,
+        "amount": 20000.0,
+        "interest_rate": 8.0,
+        "type": "Кредит"
+    },
+    {
+        "loan_id": 20161,
+        "amount": 450.0,
+        "interest_rate": 15.0,
+        "type": "Вклад"
+    },
+    {
+        "loan_id": 20164,
+        "amount": 400.0,
+        "interest_rate": 15.0,
+        "type": "Вклад"
+    }
+]

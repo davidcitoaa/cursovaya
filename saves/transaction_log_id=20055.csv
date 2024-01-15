@@ -1,0 +1,8 @@
+operation_id,client_id,operation_datetime,operation_type,operation_amount,recipients_name
+88,20055,2024-01-14 18:08:18,ordering a card,None,None
+92,20055,2024-01-14 18:08:55,transfer receipt,500.0,Мариамь Арзамасцева
+93,20055,2024-01-14 18:15:21,deposit,450.0,None
+94,20055,2024-01-14 18:45:03,replenishment,200.0,None
+95,20055,2024-01-14 18:58:11,credit,10000.0,None
+96,20055,2024-01-14 18:59:18,credit,20000.0,None
+97,20055,2024-01-15 03:56:30,deposit,400.0,None

@@ -167,15 +167,17 @@
             </button>
         </form>
 
+        <form method="get" action="/saves">
+    <button type="submit" class="button-style" style="margin-left: 10px;">Сохранить данные</button>
+</form>
+
         <form method="post" action="{{ url_for('logout') }}">
-            <button type="submit" class="button-style" style="margin-left: 10px; margin-right: 10px;">
+            <button type="submit" class="button-style" style="margin-left: 10px; ">
                 <span class="text">Выход</span>
             </button>
         </form>
 
-        <form method="get" action="/saves">
-    <button type="submit" class="button-style">Сохранить данные</button>
-</form>
+
     </div>
 
 

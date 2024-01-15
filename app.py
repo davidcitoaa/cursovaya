@@ -41,7 +41,6 @@ db = PostgresqlDatabase(
 # Инициализация Flask-Login
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
-socketio = SocketIO(app)
 
 
 # Определение базовой модели Peewee
@@ -59,6 +58,7 @@ class Client(BaseModel, UserMixin):
     password = CharField(max_length=255)
     email = CharField(max_length=255, null=True)
     phone = CharField(max_length=20)
+    role = CharField(max_length=50, default='user')
 
     def check_password(self, password):
         return get_hashed_password(password) == self.password
@@ -174,18 +174,6 @@ class TransactionLog(BaseModel):
         table_name = 'transaction_log'
 
 
-# Модель Notification
-class Notification(BaseModel):
-    notification_id = AutoField(primary_key=True)
-    client_id = ForeignKeyField(Client, backref='notifications')
-    notification_type = CharField(max_length=255)
-    content_data = CharField(max_length=255)
-    send_datetime = CharField(max_length=255)
-
-    class Meta:
-        table_name = 'notification'
-
-
 class Card(BaseModel):
     card_id = AutoField(primary_key=True)
     client_id = ForeignKeyField(Client, backref='cards')
@@ -197,13 +185,6 @@ class Card(BaseModel):
 
     class Meta:
         table_name = 'card'
-
-
-# Функция для создания уведомления
-def create_notification(client, notification_type, content_data):
-    notification = Notification.create(client_id=client, notification_type=notification_type, content_data=content_data,
-                                       send_datetime=datetime.now().strftime("%c"))
-    notification.save()
 
 
 # Определение форм для входа и регистрации
@@ -224,9 +205,6 @@ class RegisterForm(FlaskForm):
     passport_data = StringField('Passport Data', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
     phone = StringField('Phone', validators=[DataRequired()])
-
-
-print(db.get_tables())
 
 
 class UploadDataForm(FlaskForm):
@@ -317,7 +295,6 @@ def get_hashed_password(password):
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        print("1")
         user = Client.create(
             full_name=form.username.data,
             birth_date=form.birth_date.data,
@@ -482,7 +459,6 @@ def create_deposit():
                                             operation_type='deposit',
                                             operation_amount=amount)
         transaction.save()
-        print(transaction.operation_datetime)
 
         duration = int(form.duration.data)
         # Определение процентной ставки в зависимости от срока
@@ -568,10 +544,6 @@ def create_credit_record(client_id, amount, duration, monthly_payment, interest_
                            next_payment_amount=monthly_payment, loan_id=loan, date_opened=date_opened)
     credit.save()
 
-    # Создание уведомления о кредите
-    # notification_content = f'Оформлен кредит: {amount} рублей, ежемесячный платеж: {monthly_payment} рублей'
-    # create_notification(client_id, 'credit', notification_content)
-
 
 # Функция для расчета процентной ставки в зависимости от срока
 def calculate_interest_rate(duration):
@@ -590,24 +562,6 @@ def calculate_monthly_payment(amount, interest_rate, duration):
     return round(monthly_payment, 2)
 
 
-@socketio.on('connect')
-def handle_connect():
-    # Отправить уведомления при подключении
-    emit_notifications()
-
-
-def emit_notifications():
-    # Функция для отправки уведомлений на клиент
-    # Замените этот код на ваш код получения уведомлений из базы данных
-    notifications = [
-        {'type': 'payment_due', 'content': 'Оплата кредита: 1000 рублей', 'date': '2024-01-15'},
-        {'type': 'interest_due', 'content': 'Начисление процентов по вкладу: 500 рублей', 'date': '2024-02-01'},
-        # Добавьте другие уведомления по мере необходимости
-    ]
-
-    socketio.emit('notifications', notifications)
-
-
 # Ваш роут для создания виртуальной карты
 @app.route('/create_virtual_card', methods=['GET', 'POST'])
 @login_required
@@ -622,8 +576,6 @@ def create_virtual_card():
     elif form.validate_on_submit():
         # Логика создания виртуальной карты
         expiry_date = (datetime.now() + timedelta(days=4 * 365)).strftime('%Y-%m-%d')
-        print(expiry_date)
-        print(datetime.now())
         # Генерация номера карты и проверка уникальности
         generated_card_number = generate_unique_card_number()
 
@@ -650,12 +602,6 @@ def create_virtual_card():
         print(error)
     return render_template('create_virtual_card.html', user=current_user, form=form)
 
-
-# @app.route('/card_info', methods=['GET', 'POST'])
-# @login_required
-# def card_info():
-#
-#     return render_template('card_info.html', card_info=card_info, user=current_user, expiry_date=expiry_date)
 
 # Генерация уникального номера карты
 def generate_unique_card_number():
@@ -709,7 +655,6 @@ def transfer_funds():
             return render_template('transfer_funds.html', error="Выберите только один метод для перевода.")
 
         if recipient:
-            print(recipient)
             # Логика перевода средств
             sender_balance = current_user.balance.get()
 
@@ -749,16 +694,6 @@ def transfer_funds():
         return render_template('transfer_funds.html', error=error_message, form=form, current_balance=balance)
 
     return render_template('transfer_funds.html', current_balance=balance, form=form)
-
-
-# Форма для загрузки данных
-class UploadDataForm(FlaskForm):
-    tables = SelectField('Выбрать таблицы', choices=[
-        (model._meta.table_name, model._meta.table_name) for model in
-        [Client, ClientBalance, Loan, Deposit, Credit, TransactionLog, Notification, Card]
-    ])
-    format = SelectField('Формат', choices=[('json', 'JSON'), ('csv', 'CSV')])
-    file_name = StringField('Имя файла')
 
 
 # Роут для страницы загрузки данных
@@ -825,6 +760,7 @@ def get_saves_directory(directory):
 
 
 @app.route('/saves')
+@login_required
 def saves():
     # Получить данные из запроса
     credit = Credit.select().join(Loan).where(Credit.client_id == current_user)
@@ -886,6 +822,5 @@ def save_to_csv_and_json(data, saves_dir, table_name):
 
 if __name__ == '__main__':
     db.connect()
-    socketio.run(app)
     # db.create_tables([Client, ClientBalance], safe=True)
     app.run(debug=True)
