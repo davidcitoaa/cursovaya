@@ -59,6 +59,16 @@ class Client(BaseModel, UserMixin):
     email = CharField(max_length=255, null=True)
     phone = CharField(max_length=20)
     role = CharField(max_length=50, default='user')
+    blocked = CharField(max_length=50, default=None)
+
+    def block(self):
+        # Реализуйте здесь логику блокировки клиента
+        # Например, вы можете установить флаг в базе данных, указывающий на блокировку
+        self.blocked = True
+        self.save()  # Сохраняем изменения в базе данных
+
+    def is_blocked(self):
+        return self.blocked
 
     def check_password(self, password):
         return get_hashed_password(password) == self.password
@@ -265,11 +275,62 @@ class LoanRequestForm(FlaskForm):
 def load_user(user_id):
     return Client.get_by_id(user_id)
 
+@app.route('/user_list')
+@login_required  # Декоратор, требующий аутентификации пользователя
+def user_list():
+    # Здесь вы можете получить список всех пользователей из базы данных
+    # Например, используя ORM Peewee: users = User.select()
+    users = Client.select()
+
+    # Затем передайте список пользователей в шаблон
+    return render_template('user_list.html', current_user=current_user, users=users)
 
 # Маршруты Flask
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # Проверяем роль пользователяs
+    if current_user.is_authenticated:
+        print(current_user.role)
+        if current_user.role == 'admin':
+            return render_template('admin_dashboard.html', current_user=current_user)
+        else:
+            return render_template('dashboard.html', current_user=current_user)
+    return render_template('index.html', current_user=current_user)
+
+
+@app.route('/admin/dashboard')
+@login_required
+def admin_dashboard():
+    # Проверяем роль пользователя
+    if current_user.is_authenticated and current_user.role == 'admin':
+        return render_template('admin_dashboard.html', current_user=current_user)
+    else:
+        flash('У вас нет доступа к этой странице.', 'danger')
+        return redirect(url_for('index'))
+
+@app.route('/block_user/<int:user_id>', methods=['POST'])
+@login_required
+def block_user(user_id):
+    user = Client.get_or_none(Client.client_id == user_id)
+
+    if user:
+        user.block()
+        print(f'Пользователь {user.full_name} заблокирован успешно!', 'success')
+    else:
+        print('Пользователь не найден', 'error')
+
+    return redirect(url_for('user_list'))
+
+@app.route('/admin/users_list')
+@login_required
+def users_list():
+    # Проверяем роль пользователя
+    if current_user.is_authenticated and current_user.role == 'admin':
+        users = Client.select()
+        return render_template('users_list.html', users=users, current_user=current_user)
+    else:
+        flash('У вас нет доступа к этой странице.', 'danger')
+        return redirect(url_for('index'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -281,10 +342,15 @@ def login():
     if form.validate_on_submit():
         user = Client.get_or_none(Client.email == form.username.data)
         if user and user.check_password(form.password.data):
-            login_user(user)
-            return redirect(url_for('dashboard'))
-
-    return render_template('login.html', form=form)
+            # Проверка на блокировку пользователя
+            if not user.is_blocked():
+                login_user(user)
+                return redirect(url_for('dashboard'))
+            else:
+                error = 'Ваша учетная запись заблокирована. Обратитесь к администратору.'
+        else:
+            error = 'Неверный логин или пароль'
+    return render_template('login.html', form=form, error=error)
 
 
 def get_hashed_password(password):

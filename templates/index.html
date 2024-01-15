@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans:400,600,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans:400,600,700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap">
     <link rel="stylesheet" href="/static/css/custom-style.css">
 </head>
@@ -21,24 +21,30 @@
     <h1>Добро пожаловать в кредитную организацию!</h1>
 
     {% if current_user.is_authenticated %}
-            <p>Вы вошли в аккаунт. </p>
+        <p>Вы вошли в аккаунт. </p>
+        {% if current_user.role == 'admin' %}
+            <form method="get" action="{{ url_for('admin_dashboard') }}">
+                <button type="submit" class="button-style">Административная панель</button>
+            </form>
+        {% else %}
             <form method="get" action="{{ url_for('dashboard') }}">
                 <button type="submit" class="button-style">Зайти в личный кабинет</button>
             </form>
-            <form action="{{ url_for('logout') }}" method="post">
-                <button type="submit" class="button-style">Выйти</button>
-            </form>
-        {% else %}
-            <p>Если у вас есть аккаунт, войдите.</p>
-            <form method="get" action="{{ url_for('login') }}">
-                <button type="submit" class="button-style">Войти</button>
-            </form>
-
-            <p>Если у вас нет аккаунта, пожалуйста, зарегистрируйтесь.</p>
-            <form method="get" action="{{ url_for('register') }}">
-                <button type="submit" class="button-style">Зарегистрироваться</button>
-            </form>
         {% endif %}
+        <form action="{{ url_for('logout') }}" method="post">
+            <button type="submit" class="button-style">Выйти</button>
+        </form>
+    {% else %}
+        <p>Если у вас есть аккаунт, войдите.</p>
+        <form method="get" action="{{ url_for('login') }}">
+            <button type="submit" class="button-style">Войти</button>
+        </form>
+
+        <p>Если у вас нет аккаунта, пожалуйста, зарегистрируйтесь.</p>
+        <form method="get" action="{{ url_for('register') }}">
+            <button type="submit" class="button-style">Зарегистрироваться</button>
+        </form>
+    {% endif %}
 
 </main>
 </body>

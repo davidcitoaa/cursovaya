@@ -18,9 +18,14 @@
 <main class="container">
     <h1>Вход</h1>
 
+    {% if error %}
+        <p class="error">{{ error }}</p>
+        {% endif %}
+
     <div class="form-field">
     <form method="post" action="{{ url_for('login') }}">
         {{ form.csrf_token }}
+
 
 
         <label for="username">Логин:</label>

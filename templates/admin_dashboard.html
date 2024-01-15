@@ -1,0 +1,37 @@
+<!-- templates/admin_dashboard.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель админа</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans:400,600,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap">
+    <link rel="stylesheet" href="/static/css/custom-style.css">
+</head>
+<body>
+    <header>
+        <div class="title">
+            <h1 style="font-size: 3em; text-align: center;">Административная панель</h1>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Добро пожаловать, {{ current_user.full_name }}!</h1>
+
+        <!-- Дополнительные разделы административной панели могут быть добавлены здесь -->
+
+
+
+        <!-- Кнопка для перехода на страницу списка всех пользователей -->
+        <form method="get" action="/user_list">
+    <button type="submit" class="button-style" >Список пользователей</button>
+</form>
+
+        <form action="{{ url_for('logout') }}" method="post">
+            <button type="submit" class="button-style">Выйти</button>
+        </form>
+    </main>
+</body>
+</html>
