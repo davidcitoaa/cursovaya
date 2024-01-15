@@ -63,6 +63,10 @@ class Client(BaseModel, UserMixin):
     def check_password(self, password):
         return get_hashed_password(password) == self.password
 
+    class Meta:
+        database = db
+        db_table = 'client'
+
 
 class ClientBalance(BaseModel):
     balance_id = AutoField(primary_key=True)  # Добавлен столбец balance_id
@@ -746,6 +750,7 @@ def transfer_funds():
 
     return render_template('transfer_funds.html', current_balance=balance, form=form)
 
+
 # Форма для загрузки данных
 class UploadDataForm(FlaskForm):
     tables = SelectField('Выбрать таблицы', choices=[
@@ -782,6 +787,7 @@ def upload_data():
 
     return render_template('upload_data.html', form=form)
 
+
 class CustomEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Decimal):
@@ -794,6 +800,7 @@ class CustomEncoder(json.JSONEncoder):
             return str(obj)
         return super().default(obj)
 
+
 # Функция для экспорта данных в CSV
 def export_to_csv(data, headers, file_name):
     with open(file_name, 'w', newline='', encoding='utf-8') as csvfile:
@@ -803,56 +810,81 @@ def export_to_csv(data, headers, file_name):
 
 
 # Функция для экспорта данных в JSON
-def export_to_json(data, file_name):
-    with open(file_name, 'w', encoding='utf-8') as jsonfile:
+def export_to_json(data, file_name, saves_dir):
+    with open(os.path.join(saves_dir, file_name), 'w', encoding='utf-8') as jsonfile:
         json.dump(data, jsonfile, ensure_ascii=False, indent=4, cls=CustomEncoder)
 
 
+def get_saves_directory(directory):
+    # Получить путь к корневой папке приложения
+    root_dir = os.path.dirname(os.path.realpath(__file__))
+
+    # Объединить путь к корневой папке с именем файла
+    saves_dir = os.path.join(root_dir, f'{directory}')
+    return saves_dir
 
 
-# Маршрут для страницы со списком всех новостей
-@app.route('/save')
-@login_required
-def save():
-    # client
-    clients = Client.select()
+@app.route('/saves')
+def saves():
+    # Получить данные из запроса
+    credit = Credit.select().join(Loan).where(Credit.client_id == current_user)
+    deposit = Deposit.select().join(Loan).where(Deposit.client_id == current_user)
+    transaction_log = TransactionLog.select().where(TransactionLog.client_id == current_user)
+    card = Card.select().where(Card.client_id == current_user)
 
-    # Подготовка данных для экспорта в JSON
-    credits_json = [
-        {'id': c.client_id, 'full_name': c.full_name, 'birth_date': c.birth_date, 'passport_data': c.passport_data,
-         'email': c.email, 'phone': c.phone, 'password': c.password}
-        for c in clients]
-    export_to_json(credits_json, 'client_data.json')
+    # Информация о займах из модели Credit
+    credit_loan = Credit.select().join(Loan).where(Credit.client_id == current_user)
 
-    # Подготовка данных для экспорта в CSV
-    clients_csv = [[c.client_id, c.full_name, c.birth_date, c.email, c.phone, c.password] for c in clients]
-    print(clients_csv)
-    headers = ['id', 'full_name', 'birth_date', 'passport_data', 'email', 'passport_data', 'phone', 'password', ]
-    export_to_csv(clients_csv, headers, 'client_data.csv')
+    # Информация о займах из модели Deposit
+    deposit_loan = Deposit.select().join(Loan).where(Deposit.client_id == current_user)
 
-    # credits
-    credits = Credit.select()
+    # Объединение информации о займах из обеих моделей
+    loan = credit_loan + deposit_loan
 
-    # Подготовка данных для экспорта в JSON
-    result_json = [
-        {'credit_id': r.credit_id,
-         'client_id': r.client_id.client_id,
-         'closing_date': r.closing_date,
-         'next_payment_date': r.next_payment_date,
-         'next_payment_amount': r.next_payment_amount,
-         'loan_id': r.loan_id.loan_id,
-         'date_opened': r.date_opened
-         }
-        for r in credits]
-    export_to_json(result_json, 'credits_data.json')
+    saves_dir = get_saves_directory('saves')
 
-    # Подготовка данных для экспорта в CSV
-    table_csv = [[r.credit_id, r.client_id, r.closing_date, r.next_payment_date, r.next_payment_amount, r.loan_id, r.date_opened] for r in credits]
-    print(table_csv)
-    headers = ['credit_id', 'client_id', 'closing_date', 'next_payment_date', 'next_payment_amount', 'loan_id', 'date_opened']
-    export_to_csv(table_csv, headers, 'credits_data.csv')
+    # Сохранить данные
+    save_to_csv_and_json(credit, saves_dir, table_name='credit')
+    save_to_csv_and_json(deposit, saves_dir, table_name='deposit')
+    save_to_csv_and_json(transaction_log, saves_dir, table_name='transaction_log')
+    save_to_csv_and_json(card, saves_dir, table_name='card')
 
-    return redirect(url_for('dashboard'))
+    # Показать сообщение об успешном сохранении
+    return render_template('saves.html', saves_dir=saves_dir)
+
+
+
+
+
+def save_to_csv_and_json(data, saves_dir, table_name):
+    with open(os.path.join(saves_dir, f'{table_name}_id={current_user}.csv'), 'w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+
+        # Получаем названия полей из модели
+        header = data[0]._meta.fields
+        field_names = [field for field in header]
+        writer.writerow(field_names)
+
+        # Записываем данные в CSV
+        for item in data:
+            row = [str(getattr(item, field)) for field in field_names]
+            writer.writerow(row)
+
+    if table_name == 'loan':
+        # Информация о займах из модели Credit
+        credit_loan_json = [c.loan_id.__data__ for c in
+                            Credit.select().join(Loan).where(Credit.client_id == current_user)]
+
+        # Информация о займах из модели Deposit
+        deposit_loan_json = [c.loan_id.__data__ for c in
+                             Deposit.select().join(Loan).where(Deposit.client_id == current_user)]
+
+        # Объединение информации о займах из обеих моделей
+        result_json = credit_loan_json + deposit_loan_json
+    else:
+        result_json = [c.__data__ for c in data]
+
+    export_to_json(result_json, f'{table_name}_id={current_user}.json', saves_dir)
 
 
 if __name__ == '__main__':
