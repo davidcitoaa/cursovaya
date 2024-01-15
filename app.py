@@ -832,14 +832,13 @@ def saves():
     transaction_log = TransactionLog.select().where(TransactionLog.client_id == current_user)
     card = Card.select().where(Card.client_id == current_user)
 
+    # loan
+    deposit_loans = Loan.select().join(Deposit).where(Deposit.client_id == current_user)
+    credit_loans = Loan.select().join(Credit).where(Credit.client_id == current_user)
+
+    # Объединяем данные о займах из обеих моделей
+    all_loans_data = list(deposit_loans) + list(credit_loans)
     # Информация о займах из модели Credit
-    credit_loan = Credit.select().join(Loan).where(Credit.client_id == current_user)
-
-    # Информация о займах из модели Deposit
-    deposit_loan = Deposit.select().join(Loan).where(Deposit.client_id == current_user)
-
-    # Объединение информации о займах из обеих моделей
-    loan = credit_loan + deposit_loan
 
     saves_dir = get_saves_directory('saves')
 
@@ -848,12 +847,10 @@ def saves():
     save_to_csv_and_json(deposit, saves_dir, table_name='deposit')
     save_to_csv_and_json(transaction_log, saves_dir, table_name='transaction_log')
     save_to_csv_and_json(card, saves_dir, table_name='card')
+    save_to_csv_and_json(all_loans_data, saves_dir, table_name='loan')
 
     # Показать сообщение об успешном сохранении
     return render_template('saves.html', saves_dir=saves_dir)
-
-
-
 
 
 def save_to_csv_and_json(data, saves_dir, table_name):

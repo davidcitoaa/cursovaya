@@ -1,0 +1,58 @@
+[
+    {
+        "operation_id": 88,
+        "client_id": 20055,
+        "operation_datetime": "2024-01-14 18:08:18",
+        "operation_type": "ordering a card",
+        "operation_amount": null,
+        "recipients_name": null
+    },
+    {
+        "operation_id": 92,
+        "client_id": 20055,
+        "operation_datetime": "2024-01-14 18:08:55",
+        "operation_type": "transfer receipt",
+        "operation_amount": 500.0,
+        "recipients_name": "Мариамь Арзамасцева"
+    },
+    {
+        "operation_id": 93,
+        "client_id": 20055,
+        "operation_datetime": "2024-01-14 18:15:21",
+        "operation_type": "deposit",
+        "operation_amount": 450.0,
+        "recipients_name": null
+    },
+    {
+        "operation_id": 94,
+        "client_id": 20055,
+        "operation_datetime": "2024-01-14 18:45:03",
+        "operation_type": "replenishment",
+        "operation_amount": 200.0,
+        "recipients_name": null
+    },
+    {
+        "operation_id": 95,
+        "client_id": 20055,
+        "operation_datetime": "2024-01-14 18:58:11",
+        "operation_type": "credit",
+        "operation_amount": 10000.0,
+        "recipients_name": null
+    },
+    {
+        "operation_id": 96,
+        "client_id": 20055,
+        "operation_datetime": "2024-01-14 18:59:18",
+        "operation_type": "credit",
+        "operation_amount": 20000.0,
+        "recipients_name": null
+    },
+    {
+        "operation_id": 97,
+        "client_id": 20055,
+        "operation_datetime": "2024-01-15 03:56:30",
+        "operation_type": "deposit",
+        "operation_amount": 400.0,
+        "recipients_name": null
+    }
+]

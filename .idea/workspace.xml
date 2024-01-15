@@ -4,17 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9fba6176-095e-4e25-8e07-98e49a62b75a" name="Changes" comment="выгрузка json csv">
-      <change afterPath="$PROJECT_DIR$/templates/saves.html" afterDir="false" />
+    <list default="true" id="9fba6176-095e-4e25-8e07-98e49a62b75a" name="Changes" comment="выгрузка json csv, кроме load">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client_data.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client_data.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/credits_data.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/credits_data.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sdfsd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ывавыа.csv" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -271,7 +263,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705272349574</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="выгрузка json csv, кроме load">
+      <option name="closed" value="true" />
+      <created>1705283758406</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1705283758406</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -307,6 +307,7 @@
     <MESSAGE value="добавил некий общий фронт" />
     <MESSAGE value="добавил фронт" />
     <MESSAGE value="выгрузка json csv" />
-    <option name="LAST_COMMIT_MESSAGE" value="выгрузка json csv" />
+    <MESSAGE value="выгрузка json csv, кроме load" />
+    <option name="LAST_COMMIT_MESSAGE" value="выгрузка json csv, кроме load" />
   </component>
 </project>

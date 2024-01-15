@@ -1,0 +1,6 @@
+operation_id,client_id,operation_datetime,operation_type,operation_amount,recipients_name
+89,20046,2024-01-14 18:08:29,ordering a card,None,None
+90,20046,2024-01-14 18:08:41,credit,1000.0,None
+91,20046,2024-01-14 18:08:55,sending a transfer,500.0,Давид Арзамасцев
+98,20046,2024-01-15 04:06:17,deposit,200.0,None
+99,20046,2024-01-15 04:29:20,credit,100000.0,None

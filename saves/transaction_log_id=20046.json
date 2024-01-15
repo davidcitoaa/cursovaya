@@ -1,0 +1,42 @@
+[
+    {
+        "operation_id": 89,
+        "client_id": 20046,
+        "operation_datetime": "2024-01-14 18:08:29",
+        "operation_type": "ordering a card",
+        "operation_amount": null,
+        "recipients_name": null
+    },
+    {
+        "operation_id": 90,
+        "client_id": 20046,
+        "operation_datetime": "2024-01-14 18:08:41",
+        "operation_type": "credit",
+        "operation_amount": 1000.0,
+        "recipients_name": null
+    },
+    {
+        "operation_id": 91,
+        "client_id": 20046,
+        "operation_datetime": "2024-01-14 18:08:55",
+        "operation_type": "sending a transfer",
+        "operation_amount": 500.0,
+        "recipients_name": "Давид Арзамасцев"
+    },
+    {
+        "operation_id": 98,
+        "client_id": 20046,
+        "operation_datetime": "2024-01-15 04:06:17",
+        "operation_type": "deposit",
+        "operation_amount": 200.0,
+        "recipients_name": null
+    },
+    {
+        "operation_id": 99,
+        "client_id": 20046,
+        "operation_datetime": "2024-01-15 04:29:20",
+        "operation_type": "credit",
+        "operation_amount": 100000.0,
+        "recipients_name": null
+    }
+]
