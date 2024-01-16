@@ -16,5 +16,11 @@
         "amount": 200.0,
         "interest_rate": 10.0,
         "type": "Вклад"
+    },
+    {
+        "loan_id": 20174,
+        "amount": 100.0,
+        "interest_rate": 10.0,
+        "type": "Вклад"
     }
 ]
