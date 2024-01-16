@@ -1,4 +1,5 @@
-from app import *
+from routers import *
+
 if __name__ == '__main__':
     # db.connect()
 

@@ -1,0 +1,11 @@
+[
+    {
+        "credit_id": 56,
+        "client_id": 20171,
+        "closing_date": "2028-01-15",
+        "next_payment_date": "2024-02-15",
+        "next_payment_amount": 2291.67,
+        "loan_id": 20173,
+        "date_opened": "2024-01-16"
+    }
+]

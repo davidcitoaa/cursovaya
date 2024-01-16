@@ -55,9 +55,9 @@
                 <span class="date">{{ transaction_log.formatted_operation_datetime() }}</span>
                 <span class="amount">
                             {% if transaction_log.operation_amount %}
-                                {% if transaction_log.operation_type in ['deposit', 'ordering a card', 'replenishment'] %}
+                                {% if transaction_log.operation_type in ['credit', 'ordering a card', 'replenishment'] %}
                                     <span class="green-text">+{{ transaction_log.operation_amount }}</span>
-                                {% elif transaction_log.operation_type in ['credit', 'sending a transfer'] %}
+                                {% elif transaction_log.operation_type in ['deposit', 'sending a transfer'] %}
                                     <span class="red-text">-{{ transaction_log.operation_amount }}</span>
                                 {% elif transaction_log.operation_type == 'transfer receipt' %}
                                     <span class="blue-text">+{{ transaction_log.operation_amount }}</span>
