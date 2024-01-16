@@ -4,78 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9fba6176-095e-4e25-8e07-98e49a62b75a" name="Changes" comment="создал routers, models.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/backup/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backup_script.py" beforeDir="false" afterPath="$PROJECT_DIR$/backup/backup_script.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/backup/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/export.bat" beforeDir="false" afterPath="$PROJECT_DIR$/backup/export.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/backup/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/backup/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readme" beforeDir="false" afterPath="$PROJECT_DIR$/backup/readme" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backup/routers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/card_data_id=20046.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/card_data_id=20046.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/card_data_id=20055.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/card_data_id=20055.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/card_id=20046.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/card_id=20046.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/card_id=20046.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/card_id=20046.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/card_id=20055.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/card_id=20055.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/card_id=20055.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/card_id=20055.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/card_id=20171.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/card_id=20171.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/card_id=20171.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/card_id=20171.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/client_balance_id=20046.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/client_balance_id=20046.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/client_balance_id=20055.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/client_balance_id=20055.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/client_data_id=20046.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/client_data_id=20046.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/client_data_id=20055.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/client_data_id=20055.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/credit_data_id=20046.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/credit_data_id=20046.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/credit_data_id=20055.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/credit_data_id=20055.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/credit_id=20046.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/credit_id=20046.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/credit_id=20046.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/credit_id=20046.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/credit_id=20055.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/credit_id=20055.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/credit_id=20055.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/credit_id=20055.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/credit_id=20171.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/credit_id=20171.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/credit_id=20171.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/credit_id=20171.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/credits_id=20046.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/credits_id=20046.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/deposit_data_id=20046.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/deposit_data_id=20046.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/deposit_data_id=20055.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/deposit_data_id=20055.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/deposit_id=20046.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/deposit_id=20046.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/deposit_id=20046.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/deposit_id=20046.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/deposit_id=20055.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/deposit_id=20055.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/deposit_id=20055.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/deposit_id=20055.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/deposit_id=20171.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/deposit_id=20171.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/deposit_id=20171.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/deposit_id=20171.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/loan_data_id=20046.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/loan_data_id=20046.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/loan_id=20046.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/loan_id=20046.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/loan_id=20046.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/loan_id=20046.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/loan_id=20055.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/loan_id=20055.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/loan_id=20055.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/loan_id=20055.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/loan_id=20171.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/loan_id=20171.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/loan_id=20171.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/loan_id=20171.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/transaction_log_data_id=20046.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/transaction_log_data_id=20046.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/transaction_log_data_id=20055.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/transaction_log_data_id=20055.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/transaction_log_id=20046.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/transaction_log_id=20046.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/transaction_log_id=20046.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/transaction_log_id=20046.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/transaction_log_id=20055.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/transaction_log_id=20055.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/transaction_log_id=20055.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/transaction_log_id=20055.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/transaction_log_id=20171.csv" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/transaction_log_id=20171.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/saves/transaction_log_id=20171.json" beforeDir="false" afterPath="$PROJECT_DIR$/backup/saves/transaction_log_id=20171.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/custom-style.css" beforeDir="false" afterPath="$PROJECT_DIR$/backup/static/css/custom-style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/add_funds.html" beforeDir="false" afterPath="$PROJECT_DIR$/backup/templates/add_funds.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/admin_dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/backup/templates/admin_dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/card_info.html" beforeDir="false" afterPath="$PROJECT_DIR$/backup/templates/card_info.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/create_deposit.html" beforeDir="false" afterPath="$PROJECT_DIR$/backup/templates/create_deposit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/create_virtual_card.html" beforeDir="false" afterPath="$PROJECT_DIR$/backup/templates/create_virtual_card.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/backup/templates/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/export.html" beforeDir="false" afterPath="$PROJECT_DIR$/backup/templates/export.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/backup/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/loan_confirmation.html" beforeDir="false" afterPath="$PROJECT_DIR$/backup/templates/loan_confirmation.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/backup/templates/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/backup/templates/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/request_loan.html" beforeDir="false" afterPath="$PROJECT_DIR$/backup/templates/request_loan.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/saves.html" beforeDir="false" afterPath="$PROJECT_DIR$/backup/templates/saves.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/transfer_funds.html" beforeDir="false" afterPath="$PROJECT_DIR$/backup/templates/transfer_funds.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/upload_data.html" beforeDir="false" afterPath="$PROJECT_DIR$/backup/templates/upload_data.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/user_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/backup/templates/user_list.html" afterDir="false" />
-    </list>
+    <list default="true" id="9fba6176-095e-4e25-8e07-98e49a62b75a" name="Changes" comment="backup" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -394,7 +323,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705420976342</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="backup">
+      <option name="closed" value="true" />
+      <created>1705423413987</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1705423413987</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -409,7 +346,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Merge branch 'main' of https://github.com/davidcitoaa/cursovaya" />
     <MESSAGE value="Добавил отображение" />
     <MESSAGE value="Добавил отображение вкладов. Исправил неточности." />
     <MESSAGE value="изменил отображение вклада в личном кабинете" />
@@ -434,6 +370,7 @@
     <MESSAGE value="Добавил администратора" />
     <MESSAGE value="добавил бэкап" />
     <MESSAGE value="создал routers, models." />
-    <option name="LAST_COMMIT_MESSAGE" value="создал routers, models." />
+    <MESSAGE value="backup" />
+    <option name="LAST_COMMIT_MESSAGE" value="backup" />
   </component>
 </project>

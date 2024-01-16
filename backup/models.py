@@ -1,5 +1,5 @@
 # models.py
-from config import *
+from app import *
 
 
 # Определение базовой модели Peewee
